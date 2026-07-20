@@ -12,8 +12,22 @@
 - **ゲーム向けアンカリング**: bottom-center アンカー+ベースライン安定のフレーム抽出(ゲーム内でのジッタを防止)
 - **ミラー派生**: `walk-left` を `walk-right` のフレーム単位ミラーとして宣言可能(時間順序を保持・明示承認ゲート付き)
 - **エンジン非依存のエクスポート**: `spritesheet.png/webp` + TexturePacker hash 形式の `spritesheet.json`(Phaser / PixiJS でそのまま読込可)+ `animations.json`(状態毎のフレーム・表示時間・ループフラグ・アンカー)+ 任意で状態別ストリップと整数拡大 `@Nx` ペア
-- **同梱プリセット**: `minimal` / `side-scroller` / `rpg-4dir` / `codex-pet`(オリジナル hatch-pet と同一幾何の回帰確認用)
+- **同梱プリセット**: `minimal` / `side-scroller` / `rpg-4dir` / `codex-pet` に加え、ゲームキャラのアニメーションで頻出する動作を一通りカバーする `platformer-hero` / `combat-actions` / `platformer-moves`(詳細は下表)
 - **QAと修復ループ**: コンタクトシート・状態別GIFプレビュー・決定論的検証・最小スコープの行単位修復
+
+## 同梱プリセット一覧
+
+imagegen ジョブ数 = 状態数 + 1(base)。`combat-actions` と `platformer-moves` は `platformer-hero` と同じ hires/192×208/toon-3 なので、同一キャラの主人公動作を分割して生成する追加セットとして組み合わせる想定です。
+
+| プリセット | 用途 | モード/セル/等身 | 状態(フレーム数) | ジョブ数 |
+|---|---|---|---|---|
+| `minimal` | 動作確認・使い捨てNPC | pixel 32px / chibi-2 | idle(4), walk-right(6) | 3 |
+| `side-scroller` | 横スクロールアクションの基本セット | hires 192×208 / toon-3 | idle(4), run-right(8), run-left(8, mirror), jump(5), attack(5), hurt(3), death(6) | 7 |
+| `rpg-4dir` | トップダウンRPGの4方向移動 | pixel 32px / toon-3 | idle-down(2), walk-down(4), walk-up(4), walk-right(4), walk-left(4, mirror) | 6 |
+| `codex-pet` | hatch-pet(Codexアプリ固定ペット契約)との回帰確認専用 | hires 192×208 / chibi-2 | 9状態(hatch-petと同一幾何) | 10 |
+| `platformer-hero` | 横スクロールアクション主人公のフルセット | hires 192×208 / toon-3 | idle(4), run(6), jump(3), fall(3), attack(5), hurt(3), death(6) | 8 |
+| `combat-actions` | 戦闘動作の追加セット(コンボ・遠距離・魔法・防御・回避) | hires 192×208 / toon-3 | attack-combo(8), shoot(4), cast(6), block(2), dodge(4) | 6 |
+| `platformer-moves` | 移動バリエーションの追加セット | hires 192×208 / toon-3 | crouch(2), climb(4), dash(4), land(3), wall-slide(2) | 6 |
 
 ## 動作要件
 
