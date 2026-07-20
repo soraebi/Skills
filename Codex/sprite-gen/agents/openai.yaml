@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sprite Gen"
+  short_description: "Generate game-ready character spritesheets"
+  default_prompt: "Use $sprite-gen to create an engine-neutral game character spritesheet (idle/walk/run/attack/etc., pixel or hires, any body proportion) from a concept, reference image, or brand cue."

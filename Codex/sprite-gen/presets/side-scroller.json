@@ -1,0 +1,110 @@
+{
+  "preset_id": "side-scroller",
+  "description": "Side-scrolling platformer character: locomotion, jump, attack, hurt, death.",
+  "mode": "hires",
+  "cell": {"width": 192, "height": 208},
+  "proportion": "toon-3",
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "states": [
+    {
+      "name": "idle",
+      "frames": 4,
+      "durations_ms": {"each": 160, "last": 280},
+      "loop": true,
+      "effects": "none",
+      "action": "Calm idle loop: subtle breathing, a tiny blink, and a very small body bob; essentially the same pose and facing in every frame.",
+      "requirements": [
+        "Keep the character in the same pose, facing direction, silhouette, markings, palette, and prop state across all 4 frames.",
+        "The loop must still show visible micro-variation; do not repeat effectively identical copies.",
+        "Do not show walking, running, jumping, attacking, or any large gesture.",
+        "Feet or base anchor should stay planted or nearly planted.",
+        "The first and last frames should be visually close so the loop does not pop."
+      ]
+    },
+    {
+      "name": "run-right",
+      "frames": 8,
+      "durations_ms": {"each": 110, "last": 200},
+      "loop": true,
+      "effects": "none",
+      "action": "Rightward run cycle: alternating stride through body and limb poses only.",
+      "requirements": [
+        "The row must unmistakably face and travel right.",
+        "The stride must visibly alternate across the 8 frames instead of repeating one nearly static pose.",
+        "Do not draw speed lines, dust clouds, floor shadows, motion trails, or detached motion effects."
+      ]
+    },
+    {
+      "name": "run-left",
+      "frames": 8,
+      "durations_ms": {"each": 110, "last": 200},
+      "loop": true,
+      "effects": "none",
+      "mirror_of": {
+        "source": "run-right",
+        "transform": "framewise-horizontal-mirror-preserving-order",
+        "requires_explicit_approval": true
+      },
+      "action": "Leftward run cycle: alternating stride through body and limb poses only.",
+      "requirements": [
+        "The row must unmistakably face and travel left.",
+        "The stride must visibly alternate across the 8 frames instead of repeating one nearly static pose.",
+        "Do not draw speed lines, dust clouds, floor shadows, motion trails, or detached motion effects."
+      ]
+    },
+    {
+      "name": "jump",
+      "frames": 5,
+      "durations_ms": {"each": 130, "last": 260},
+      "loop": true,
+      "effects": "none",
+      "action": "Jump arc through pose and vertical body position only: anticipation, lift, airborne peak, descent, settle.",
+      "requirements": [
+        "Show the jump through pose and vertical body position only.",
+        "Do not draw ground shadows, contact shadows, drop shadows, dust, or landing marks.",
+        "Keep the background outside the character perfectly flat chroma key with no darker key-colored patches."
+      ]
+    },
+    {
+      "name": "attack",
+      "frames": 5,
+      "durations_ms": [90, 70, 70, 110, 180],
+      "loop": false,
+      "effects": "attached",
+      "action": "Melee attack: windup, strike, follow-through, and recovery through pose and an attached weapon/limb effect only.",
+      "requirements": [
+        "Any weapon trail, slash mark, or impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached slash arcs, floating impact stars, or motion lines outside the silhouette.",
+        "Keep apparent scale and baseline stable within the row."
+      ]
+    },
+    {
+      "name": "hurt",
+      "frames": 3,
+      "durations_ms": {"each": 100, "last": 180},
+      "loop": false,
+      "effects": "attached",
+      "action": "Hit reaction: impact flinch, recoil, and recovery.",
+      "requirements": [
+        "Show impact through pose only: flinch, recoil, brief off-balance lean, then recovery.",
+        "Any attached impact flash or stars must overlap the silhouette and stay inside the same frame slot.",
+        "Do not draw detached stars, floating symbols, or separate impact bursts."
+      ]
+    },
+    {
+      "name": "death",
+      "frames": 6,
+      "durations_ms": [120, 120, 140, 160, 200, 260],
+      "loop": false,
+      "effects": "attached",
+      "action": "Death sequence: impact, stagger, collapse, and a held final defeated pose. Not a loop; the last frame is the resting end state.",
+      "requirements": [
+        "The final frame must be a stable, held defeated pose suitable as an animation end state, not a mid-motion frame.",
+        "Any attached dust or impact effect must overlap the silhouette and stay inside the same frame slot.",
+        "Do not draw detached dust clouds, floating symbols, or ground cracks outside the silhouette."
+      ]
+    }
+  ]
+}

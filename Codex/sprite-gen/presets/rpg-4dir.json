@@ -1,0 +1,83 @@
+{
+  "preset_id": "rpg-4dir",
+  "description": "Top-down 4-direction RPG character: idle-down plus down/up/right walk cycles, left mirrored.",
+  "mode": "pixel",
+  "logical_size": 32,
+  "proportion": "toon-3",
+  "palette_colors": 24,
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "states": [
+    {
+      "name": "idle-down",
+      "frames": 2,
+      "durations_ms": {"each": 450, "last": 450},
+      "loop": true,
+      "effects": "none",
+      "action": "Facing-down idle loop: a tiny blink or breathing shift between two nearly identical poses.",
+      "requirements": [
+        "Character faces straight down (toward the viewer) in both frames.",
+        "Keep the pose, silhouette, and palette essentially identical between the two frames aside from the subtle idle motion.",
+        "Feet should stay planted."
+      ]
+    },
+    {
+      "name": "walk-down",
+      "frames": 4,
+      "durations_ms": {"each": 150, "last": 150},
+      "loop": true,
+      "effects": "none",
+      "action": "Facing-down walk cycle: alternating stride through legs and arms only, viewed from the front.",
+      "requirements": [
+        "Character faces and moves straight down (toward the viewer) in every frame.",
+        "The stride must visibly alternate across the 4 frames instead of repeating one static pose.",
+        "Do not draw floor shadows, dust, or motion trails."
+      ]
+    },
+    {
+      "name": "walk-up",
+      "frames": 4,
+      "durations_ms": {"each": 150, "last": 150},
+      "loop": true,
+      "effects": "none",
+      "action": "Facing-up walk cycle: alternating stride through legs and arms only, viewed from behind.",
+      "requirements": [
+        "Character faces and moves straight up (away from the viewer, back visible) in every frame.",
+        "The stride must visibly alternate across the 4 frames instead of repeating one static pose.",
+        "Do not draw floor shadows, dust, or motion trails."
+      ]
+    },
+    {
+      "name": "walk-right",
+      "frames": 4,
+      "durations_ms": {"each": 150, "last": 150},
+      "loop": true,
+      "effects": "none",
+      "action": "Rightward walk cycle: alternating stride through legs and arms only, viewed from the side.",
+      "requirements": [
+        "The row must unmistakably face and travel right, viewed from the side.",
+        "The stride must visibly alternate across the 4 frames instead of repeating one static pose.",
+        "Do not draw floor shadows, dust, or motion trails."
+      ]
+    },
+    {
+      "name": "walk-left",
+      "frames": 4,
+      "durations_ms": {"each": 150, "last": 150},
+      "loop": true,
+      "effects": "none",
+      "mirror_of": {
+        "source": "walk-right",
+        "transform": "framewise-horizontal-mirror-preserving-order",
+        "requires_explicit_approval": true
+      },
+      "action": "Leftward walk cycle: alternating stride through legs and arms only, viewed from the side.",
+      "requirements": [
+        "The row must unmistakably face and travel left, viewed from the side.",
+        "The stride must visibly alternate across the 4 frames instead of repeating one static pose.",
+        "Do not draw floor shadows, dust, or motion trails."
+      ]
+    }
+  ]
+}

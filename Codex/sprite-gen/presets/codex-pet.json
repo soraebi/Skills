@@ -1,0 +1,136 @@
+{
+  "preset_id": "codex-pet",
+  "description": "Regression preset mirroring hatch-pet's fixed 8x9 Codex app pet contract, for parity checks against hatch-pet. Official Codex pet creation should still use the hatch-pet skill directly.",
+  "mode": "hires",
+  "cell": {"width": 192, "height": 208},
+  "proportion": "chibi-2",
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "states": [
+    {
+      "name": "idle",
+      "frames": 6,
+      "durations_ms": [280, 110, 110, 140, 140, 320],
+      "loop": true,
+      "effects": "none",
+      "action": "Calm low-distraction resting loop: subtle breathing, tiny blink, slight head/body bob, and only quiet persona-preserving motion.",
+      "requirements": [
+        "CRITICAL: idle is the low-distraction baseline state and the first frame is also used as the reduced-motion static pet.",
+        "Use only subtle idle motion: gentle breathing, a tiny blink, a slight head or body bob, a very small material sway, or another quiet motion that fits the pet persona.",
+        "Keep the pet essentially in the same pose, facing direction, silhouette, markings, palette, and prop state across all 6 frames.",
+        "Idle variation must stay calm but still read as animation; do not repeat effectively identical copies across the loop.",
+        "Do not show waving, walking, running, jumping, talking, working, reviewing, emotional reactions, large gestures, item interactions, or new props.",
+        "Feet, base, body, or object anchor should remain planted or nearly planted.",
+        "The first and last frames should be very close visually so the loop feels calm and does not pop."
+      ]
+    },
+    {
+      "name": "running-right",
+      "frames": 8,
+      "durations_ms": [120, 120, 120, 120, 120, 120, 120, 220],
+      "loop": true,
+      "effects": "none",
+      "action": "Dragging-right loop: show directional movement to the right through body and limb poses only.",
+      "requirements": [
+        "Show directional drag movement to the right through body, limb, and prop movement only.",
+        "The row must unmistakably face and travel right.",
+        "The movement cadence must alternate visibly across the 8 frames instead of repeating one nearly static stride.",
+        "Do not draw speed lines, dust clouds, floor shadows, motion trails, or detached motion effects."
+      ]
+    },
+    {
+      "name": "running-left",
+      "frames": 8,
+      "durations_ms": [120, 120, 120, 120, 120, 120, 120, 220],
+      "loop": true,
+      "effects": "none",
+      "mirror_of": {
+        "source": "running-right",
+        "transform": "framewise-horizontal-mirror-preserving-order",
+        "requires_explicit_approval": true
+      },
+      "action": "Dragging-left loop: show directional movement to the left through body and limb poses only.",
+      "requirements": [
+        "Show directional drag movement to the left through body, limb, and prop movement only.",
+        "The row must unmistakably face and travel left.",
+        "The movement cadence must alternate visibly across the 8 frames instead of repeating one nearly static stride.",
+        "Do not draw speed lines, dust clouds, floor shadows, motion trails, or detached motion effects."
+      ]
+    },
+    {
+      "name": "waving",
+      "frames": 4,
+      "durations_ms": [140, 140, 140, 280],
+      "loop": true,
+      "effects": "none",
+      "action": "Greeting loop: paw or limb down, raised, tilted, and returning in a friendly attention gesture.",
+      "requirements": [
+        "Show the greeting through paw, hand, wing, or limb pose only.",
+        "Do not draw wave marks, motion arcs, lines, sparkles, symbols, or floating effects around the gesture."
+      ]
+    },
+    {
+      "name": "jumping",
+      "frames": 5,
+      "durations_ms": [140, 140, 140, 140, 280],
+      "loop": true,
+      "effects": "none",
+      "action": "Hover jump loop: anticipation, lift, airborne peak, descent, and settle through body height.",
+      "requirements": [
+        "Show the jump through pose and vertical body position only: anticipation, lift, airborne peak, descent, settle.",
+        "Do not draw ground shadows, contact shadows, drop shadows, oval shadows, landing marks, dust, smears, bounce pads, or motion marks under the pet.",
+        "Keep the background outside the pet perfectly flat chroma key with no darker key-colored patches."
+      ]
+    },
+    {
+      "name": "failed",
+      "frames": 8,
+      "durations_ms": [140, 140, 140, 140, 140, 140, 140, 240],
+      "loop": true,
+      "effects": "attached",
+      "action": "Blocked/failed loop: slumped or deflated reaction with sad or closed eyes.",
+      "requirements": [
+        "Show failure through slumped pose, drooping ears/limbs, closed or sad eyes, and lower body position.",
+        "Tears, small smoke puffs, or tiny stars are allowed only if attached to or overlapping the pet silhouette and kept inside the same frame slot.",
+        "Do not draw red X marks, floating symbols, detached stars, separated smoke clouds, falling tear drops, dust, or other loose effects."
+      ]
+    },
+    {
+      "name": "waiting",
+      "frames": 6,
+      "durations_ms": [150, 150, 150, 150, 150, 260],
+      "loop": true,
+      "effects": "none",
+      "action": "Needs-input loop: expectant asking pose for approval, help, or user input.",
+      "requirements": [
+        "Show that Codex needs approval, help, or user input through an expectant asking pose.",
+        "Keep the motion patient and readable, without turning it into ordinary idle or review."
+      ]
+    },
+    {
+      "name": "running",
+      "frames": 6,
+      "durations_ms": [120, 120, 120, 120, 120, 220],
+      "loop": true,
+      "effects": "none",
+      "action": "Working loop: focused active-task processing, thinking, typing, scanning, or effortful concentration; not literal foot-running, jogging, sprinting, treadmill motion, raised knees, long steps, pumping arms, or directional travel.",
+      "requirements": [
+        "Show the pet actively working or processing, as if running a task: focused posture, busy hands or paws, purposeful bobbing, thinking motion, tool or prop motion only if already part of the pet identity, or other non-locomotion activity.",
+        "Do not show literal foot-running, jogging, sprinting, treadmill motion, raised knees, long steps, pumping arms, directional travel, speed lines, dust clouds, floor shadows, motion trails, or detached motion effects."
+      ]
+    },
+    {
+      "name": "review",
+      "frames": 6,
+      "durations_ms": [150, 150, 150, 150, 150, 280],
+      "loop": true,
+      "effects": "none",
+      "action": "Ready-review loop: focused inspection of completed output with lean, blink, narrowed eyes, head tilt, or paw pose.",
+      "requirements": [
+        "Show review through lean, blink, narrowed eyes, head tilt, or paw/hand position.",
+        "Do not add magnifying glasses, papers, code, UI, punctuation, symbols, or other new props unless they already exist in the base pet identity."
+      ]
+    }
+  ]
+}
