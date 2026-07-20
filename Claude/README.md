@@ -1,5 +1,5 @@
-# Claude Code skills
+# Claude Code スキル
 
-Skills for [Claude Code](https://claude.com/claude-code) will live here. Install by copying a skill directory to `~/.claude/skills/`.
+[Claude Code](https://claude.com/claude-code) 用のスキルをここに配置します。スキルディレクトリを `~/.claude/skills/` にコピーしてインストールしてください。
 
-Nothing published yet.
+現時点では公開スキルはありません。

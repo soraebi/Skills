@@ -1,43 +1,43 @@
 # sprite-gen
 
-A [Codex](https://developers.openai.com/codex) skill that generates **engine-neutral animated game-character spritesheets** — from a text concept, brand cues, or reference images — using Codex's built-in image generation plus a deterministic Python pipeline for extraction, atlas assembly, validation, and visual QA.
+**エンジン非依存のゲームキャラ用アニメーションスプライトシート**を生成する [Codex](https://developers.openai.com/codex) スキル。テキストコンセプト・ブランドキュー・参照画像から、Codex 組み込みの画像生成と決定論的な Python パイプライン(フレーム抽出・アトラス合成・検証・視認QA)でスプライトシートを作成します。
 
-Forked from [`hatch-pet`](https://github.com/openai/skills/tree/main/skills/.curated/hatch-pet) in [openai/skills](https://github.com/openai/skills) and generalized from the fixed Codex-app pet contract (8x9 grid, 192x208 cells, 9 fixed states) into a fully config-driven sprite pipeline.
+[openai/skills](https://github.com/openai/skills) の [`hatch-pet`](https://github.com/openai/skills/tree/main/skills/.curated/hatch-pet) をフォークし、Codex アプリ固定のペット契約(8×9 グリッド・192×208 セル・9状態固定)を完全コンフィグ駆動のスプライトパイプラインへ一般化したものです。
 
-## Features
+## 特徴
 
-- **Config-driven animation spec**: states, frame counts, per-frame durations, atlas grid, and cell size all come from a resolved spec (`sprite_request.json`) — single source of truth for every script
-- **Two render modes**: `pixel` (logical pixel-art sizes such as 16/32/64 px, generated hi-res then deterministically pixelized with a global palette) and `hires`
-- **Selectable body proportions**: `chibi-2`, `toon-3`, `semi-5`, `realistic-7` (head-to-body ratio drives prompts and default cell aspect)
-- **Game-ready anchoring**: bottom-center anchor with baseline-stable frame extraction (no in-game jitter)
-- **Mirror derivation**: declare `walk-left` as a framewise mirror of `walk-right` (temporal order preserved, explicit approval gated)
-- **Engine-neutral export**: `spritesheet.png/webp` + TexturePacker-hash `spritesheet.json` (loads natively in Phaser / PixiJS) + `animations.json` (per-state frames, durations, loop flags, anchor) + optional per-state strips and integer-scaled `@Nx` pairs
-- **Shipped presets**: `minimal`, `side-scroller`, `rpg-4dir`, and `codex-pet` (regression preset matching the original hatch-pet geometry)
-- **QA and repair loop**: contact sheets, per-state GIF previews, deterministic validation, and smallest-scope row repair
+- **コンフィグ駆動のアニメーション仕様**: 状態・フレーム数・フレーム毎の表示時間・アトラスグリッド・セルサイズを解決済みスペック(`sprite_request.json`)で一元管理 — 全スクリプトの単一情報源
+- **2つのレンダーモード**: `pixel`(16/32/64px 等の論理ピクセルサイズ。高解像度で生成し、グローバルパレットで決定論的にピクセライズ)と `hires`
+- **等身の選択**: `chibi-2` / `toon-3` / `semi-5` / `realistic-7`(頭身比がプロンプトとセル縦横比の既定値に反映)
+- **ゲーム向けアンカリング**: bottom-center アンカー+ベースライン安定のフレーム抽出(ゲーム内でのジッタを防止)
+- **ミラー派生**: `walk-left` を `walk-right` のフレーム単位ミラーとして宣言可能(時間順序を保持・明示承認ゲート付き)
+- **エンジン非依存のエクスポート**: `spritesheet.png/webp` + TexturePacker hash 形式の `spritesheet.json`(Phaser / PixiJS でそのまま読込可)+ `animations.json`(状態毎のフレーム・表示時間・ループフラグ・アンカー)+ 任意で状態別ストリップと整数拡大 `@Nx` ペア
+- **同梱プリセット**: `minimal` / `side-scroller` / `rpg-4dir` / `codex-pet`(オリジナル hatch-pet と同一幾何の回帰確認用)
+- **QAと修復ループ**: コンタクトシート・状態別GIFプレビュー・決定論的検証・最小スコープの行単位修復
 
-## Requirements
+## 動作要件
 
-- Codex CLI / Codex app with the `$imagegen` system skill available
-- Python 3.10+ with [Pillow](https://pypi.org/project/pillow/) for the bundled `scripts/` (any launcher works, e.g. `uv run --with pillow python ...`)
-- `jq` for the job-manifest workflow described in `SKILL.md`
+- Codex CLI / Codex アプリ(`$imagegen` システムスキルが利用可能であること)
+- Python 3.10+ と [Pillow](https://pypi.org/project/pillow/)(同梱 `scripts/` 用。`uv run --with pillow python ...` などランチャーは任意)
+- `jq`(`SKILL.md` に記載のジョブマニフェスト処理で使用)
 
-## Install
+## インストール
 
-Copy this directory to your Codex skills folder:
+このディレクトリを Codex のスキルフォルダにコピーしてください:
 
 ```text
 ${CODEX_HOME:-$HOME/.codex}/skills/sprite-gen/
 ```
 
-Then ask Codex for something like: *"Use sprite-gen to create a side-scroller character: a cheerful moss-green slime knight, pixel mode, 32px, chibi proportions."*
+その後、Codex に次のように依頼します: 「sprite-gen で横スクロール用キャラを作って: 陽気な苔グリーンのスライム騎士、pixel モード、32px、チビ等身」
 
-## Documentation
+## ドキュメント
 
-- `SKILL.md` — the full workflow Codex follows (generation delegation, worker prompts, repair loop, packaging)
-- `references/spec-format.md` — spec schema and preset authoring guide
-- `references/output-formats.md` — export file formats with Phaser/PixiJS loading snippets
-- `references/qa-rubric.md` — visual QA rubric
+- `SKILL.md` — Codex が従うワークフロー全体(生成委譲・ワーカープロンプト・修復ループ・パッケージング)
+- `references/spec-format.md` — スペックのスキーマとプリセット作成ガイド
+- `references/output-formats.md` — エクスポートファイル形式と Phaser/PixiJS の読込スニペット
+- `references/qa-rubric.md` — 視認QAのルーブリック
 
-## License
+## ライセンス
 
-Apache License 2.0 (see `LICENSE.txt`). This is a modified fork of `hatch-pet` from [openai/skills](https://github.com/openai/skills); substantial changes include the config-driven spec system (`scripts/spec_lib.py`), pixel-art pipeline (`scripts/pixelize_frames.py`), engine-neutral exporter (`scripts/export_spritesheet.py`), generalized mirror derivation, and rewritten skill/reference documentation.
+Apache License 2.0(`LICENSE.txt` 参照)。本スキルは [openai/skills](https://github.com/openai/skills) の `hatch-pet` を改変したフォークです。主な変更点: コンフィグ駆動のスペックシステム(`scripts/spec_lib.py`)、ピクセルアートパイプライン(`scripts/pixelize_frames.py`)、エンジン非依存エクスポータ(`scripts/export_spritesheet.py`)、ミラー派生の一般化、スキル/リファレンスドキュメントの全面書き直し。

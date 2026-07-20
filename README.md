@@ -1,20 +1,20 @@
 # Skills
 
-Custom skills for AI coding agents, organized by the agent runtime they target. Each top-level directory maps to one runtime's skills folder, so installation is always a single copy:
+AI コーディングエージェント向けの自作スキル集。対象エージェントのランタイム毎にディレクトリを分けており、各ディレクトリはそのランタイムのスキルフォルダと 1:1 で対応します。インストールはコピー1回で完了します:
 
-| Directory | Runtime | Install to |
+| ディレクトリ | ランタイム | インストール先 |
 |---|---|---|
-| [`Codex/`](Codex/) | [Codex](https://developers.openai.com/codex) (CLI / app) | `${CODEX_HOME:-$HOME/.codex}/skills/` |
+| [`Codex/`](Codex/) | [Codex](https://developers.openai.com/codex)(CLI / アプリ) | `${CODEX_HOME:-$HOME/.codex}/skills/` |
 | [`Claude/`](Claude/) | [Claude Code](https://claude.com/claude-code) | `~/.claude/skills/` |
 
-Skills are runtime-specific: they depend on each agent's skill format, built-in tools, and invocation conventions, and are not interchangeable across runtimes.
+スキルは各エージェントのスキル形式・組み込みツール・呼び出し規約に依存するランタイム固有の成果物であり、ランタイム間での流用はできません。
 
-## Catalog
+## カタログ
 
-| Skill | Runtime | Category | Description |
+| スキル | ランタイム | カテゴリ | 概要 |
 |---|---|---|---|
-| [sprite-gen](Codex/sprite-gen/) | Codex | game / image generation | Engine-neutral animated game-character spritesheets (pixel-art or hires, configurable states/proportions, TexturePacker + Phaser/PixiJS-ready export). Fork of [openai/skills hatch-pet](https://github.com/openai/skills/tree/main/skills/.curated/hatch-pet). |
+| [sprite-gen](Codex/sprite-gen/) | Codex | ゲーム / 画像生成 | エンジン非依存のゲームキャラ用アニメーションスプライトシート生成(ピクセルアート/高解像度の2モード、状態・等身のコンフィグ駆動、TexturePacker 形式+Phaser/PixiJS 対応エクスポート)。[openai/skills の hatch-pet](https://github.com/openai/skills/tree/main/skills/.curated/hatch-pet) のフォーク。 |
 
-## License
+## ライセンス
 
-Unless noted otherwise in a skill's own directory, contents are licensed under Apache License 2.0. Skills forked from upstream projects retain their original license and attribution (see each skill's `LICENSE.txt` / `README.md`).
+各スキルのディレクトリ内に別途記載がない限り、Apache License 2.0 を適用します。上流プロジェクトからフォークしたスキルは元のライセンスと帰属表示を維持しています(各スキルの `LICENSE.txt` / `README.md` を参照)。
