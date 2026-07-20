@@ -1,0 +1,79 @@
+{
+  "preset_id": "combat-actions",
+  "description": "戦闘動作の追加セット: コンボ攻撃・射撃・詠唱・ガード・回避の5状態(hires, toon-3, 6ジョブ)。platformer-hero系プリセットと組み合わせて使う想定。",
+  "mode": "hires",
+  "cell": {"width": 192, "height": 208},
+  "proportion": "toon-3",
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "states": [
+    {
+      "name": "attack-combo",
+      "frames": 8,
+      "durations_ms": [90, 70, 60, 70, 90, 70, 110, 180],
+      "loop": false,
+      "effects": "attached",
+      "action": "Multi-hit melee combo: two to three linked strikes through windup, hit, brief recovery, next windup, hit, and a final follow-through/recovery pose.",
+      "requirements": [
+        "Show a visibly distinct strike beat at each hit frame rather than one repeated pose stretched across all 8 frames.",
+        "Any weapon trail or impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached slash arcs, floating impact stars, or motion lines outside the silhouette.",
+        "Keep apparent scale and baseline stable within the row."
+      ]
+    },
+    {
+      "name": "shoot",
+      "frames": 4,
+      "durations_ms": {"each": 100, "last": 180},
+      "loop": false,
+      "effects": "attached",
+      "action": "Ranged attack cycle: raise/aim the ranged weapon, draw/charge, release, and brief recoil recovery.",
+      "requirements": [
+        "Show the ranged weapon (bow, gun, sling, or similar) staying attached to the character's hands in every frame.",
+        "Any muzzle flash, bowstring flex, or release glow must be physically attached to the weapon/silhouette and stay inside the same frame slot.",
+        "Do not draw a separate projectile, detached flash, motion lines, or smoke trail.",
+        "Keep the aim direction and baseline stable within the row."
+      ]
+    },
+    {
+      "name": "cast",
+      "frames": 6,
+      "durations_ms": {"each": 110, "last": 220},
+      "loop": false,
+      "effects": "attached",
+      "action": "Spellcasting sequence: raise hands/focus item, channel, peak casting gesture, and release/recovery.",
+      "requirements": [
+        "Any magical glow, rune, or energy effect must be physically attached to or overlapping the hands or focus item and stay inside the same frame slot.",
+        "Do not draw detached floating orbs, particle bursts, sparkles, or trailing energy outside the silhouette.",
+        "Keep the character's footing and baseline stable; the casting motion should read through arms/hands and posture."
+      ]
+    },
+    {
+      "name": "block",
+      "frames": 2,
+      "durations_ms": {"each": 260, "last": 260},
+      "loop": true,
+      "effects": "none",
+      "action": "Held defensive guard stance: shield or arms raised to block, with a very small idle shift between the two frames.",
+      "requirements": [
+        "Keep the guarding pose, facing direction, and prop (shield/weapon) essentially identical between the two frames aside from the subtle shift.",
+        "Do not draw impact flashes, sparks, or effects; this state has no incoming-hit moment, just the held guard.",
+        "Feet should stay planted."
+      ]
+    },
+    {
+      "name": "dodge",
+      "frames": 4,
+      "durations_ms": {"each": 90, "last": 140},
+      "loop": false,
+      "effects": "none",
+      "action": "Quick evasive dodge: low crouch/lean anticipation, sideways or backward evasive motion, and recovery back toward a neutral stance.",
+      "requirements": [
+        "Show the evasion through pose and body lean/position only.",
+        "Do not draw speed lines, motion blur, dust, afterimages, or any detached motion effect.",
+        "Keep the character fully on-model with no cropped limbs during the evasive lean."
+      ]
+    }
+  ]
+}
