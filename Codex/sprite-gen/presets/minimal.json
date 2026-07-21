@@ -8,6 +8,10 @@
   "anchor": "bottom-center",
   "effects_default": "none",
   "chroma_key": "auto",
+  "genre": "starter",
+  "tier": "base",
+  "view": "side",
+  "tags": ["side-view", "pixel", "smoke-test"],
   "states": [
     {
       "name": "idle",

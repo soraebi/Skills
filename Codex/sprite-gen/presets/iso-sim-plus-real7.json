@@ -1,0 +1,140 @@
+{
+  "preset_id": "iso-sim-plus-real7",
+  "description": "Realistic isometric tactics/sim character, advanced move set: attack-se, attack-sw, guard-se, cast-se, hurt-se, death-se.",
+  "mode": "hires",
+  "cell": {
+    "width": 192,
+    "height": 288
+  },
+  "proportion": "realistic-7",
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "genre": "iso-sim",
+  "tier": "plus",
+  "view": "isometric",
+  "tags": [
+    "isometric",
+    "tactics",
+    "hires",
+    "plus"
+  ],
+  "states": [
+    {
+      "name": "attack-se",
+      "frames": 4,
+      "durations_ms": [
+        90,
+        80,
+        110,
+        160
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "South-east melee attack: windup, strike, and follow-through through pose and an attached weapon effect only. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces south-east (diagonally toward the viewer and to the right) in every frame.",
+        "Any weapon trail or impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached slash arcs, floating impact stars, or motion lines outside the silhouette.",
+        "Avoid asymmetric costume details, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    },
+    {
+      "name": "attack-sw",
+      "frames": 4,
+      "durations_ms": [
+        90,
+        80,
+        110,
+        160
+      ],
+      "loop": false,
+      "effects": "attached",
+      "mirror_of": {
+        "source": "attack-se",
+        "transform": "framewise-horizontal-mirror-preserving-order",
+        "requires_explicit_approval": true
+      },
+      "action": "South-west melee attack: windup, strike, and follow-through through pose and an attached weapon effect only. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces south-west (diagonally toward the viewer and to the left) in every frame.",
+        "Any weapon trail or impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached slash arcs, floating impact stars, or motion lines outside the silhouette.",
+        "Avoid asymmetric costume details, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    },
+    {
+      "name": "guard-se",
+      "frames": 2,
+      "durations_ms": {
+        "each": 320,
+        "last": 320
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "South-east guard stance: a raised guard pose with a small breathing shift between two nearly identical poses. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces south-east (diagonally toward the viewer and to the right) in both frames.",
+        "Keep a braced, raised-guard pose in both frames.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    },
+    {
+      "name": "cast-se",
+      "frames": 5,
+      "durations_ms": {
+        "each": 150,
+        "last": 220
+      },
+      "loop": false,
+      "effects": "attached",
+      "action": "South-east spellcast: raise arms or a prop, channel briefly, and release. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces south-east (diagonally toward the viewer and to the right) in every frame.",
+        "Any attached casting effect must stay opaque, hard-edged, and physically overlapping the silhouette.",
+        "Do not draw detached magic circles, floating runes, particle bursts, or glow halos.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    },
+    {
+      "name": "hurt-se",
+      "frames": 3,
+      "durations_ms": {
+        "each": 100,
+        "last": 180
+      },
+      "loop": false,
+      "effects": "attached",
+      "action": "South-east hit reaction: impact flinch, recoil, and recovery. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces south-east (diagonally toward the viewer and to the right) in every frame.",
+        "Any attached impact flash or stars must overlap the silhouette and stay inside the same frame slot.",
+        "Do not draw detached stars, floating symbols, or separate impact bursts.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    },
+    {
+      "name": "death-se",
+      "frames": 6,
+      "durations_ms": [
+        120,
+        120,
+        140,
+        160,
+        200,
+        260
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "South-east death sequence: impact, stagger, collapse, and a held final defeated pose. Not a loop; the last frame is the resting end state. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces south-east (diagonally toward the viewer and to the right) through the sequence.",
+        "The final frame must be a stable, held defeated pose suitable as an animation end state, not a mid-motion frame.",
+        "Do not draw detached dust clouds, floating symbols, or ground cracks outside the silhouette.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    }
+  ]
+}

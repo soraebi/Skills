@@ -157,9 +157,26 @@ the user gave only a bare brand name, ask for brand cues before generating.
 Every run is driven by a resolved spec, never hardcoded state lists. Before
 preparing a run:
 
-1. Pick a bundled preset (`minimal`, `side-scroller`, `rpg-4dir`,
-   `codex-pet`) or point to a fully custom `--spec` file. `minimal` is the
-   right default for a quick smoke test or a throwaway NPC.
+1. Pick a bundled preset or point to a fully custom `--spec` file. Bundled
+   presets follow a `<genre>[-plus]-<proportion>` naming scheme (e.g.
+   `side-action-toon3`, `topdown-rpg-plus-real7`); list what is actually
+   installed instead of assuming a fixed set:
+
+   ```bash
+   SKILL_DIR="${CODEX_HOME:-$HOME/.codex}/skills/sprite-gen"
+   ls "$SKILL_DIR/presets"/*.json
+   ```
+
+   Genres are `side-action`, `topdown-rpg`, `iso-sim`, `beltscroll`,
+   `adventure`, `shmup`; each has a `base` tier (core movement/combat) and a
+   `-plus` tier (advanced moves), times 4 body-proportion suffixes (`chibi2`
+   `toon3` `semi5` `real7`, matching the `chibi-2`/`toon-3`/`semi-5`/
+   `realistic-7` proportions). `minimal` and `codex-pet` sit outside that
+   scheme (smoke test and hatch-pet regression parity respectively) and are
+   named directly. Every preset file also carries tool-only metadata
+   (`genre`, `tier`, `view`, `tags`) that the pipeline itself never reads --
+   see `references/spec-format.md`. `minimal` is the right default for a
+   quick smoke test or a throwaway NPC.
 2. Confirm the resulting spec with the user before spending any `$imagegen`
    quota: states, frame counts, body proportion (`chibi-2`/`toon-3`/
    `semi-5`/`realistic-7`), mode (`pixel` with a logical size, or `hires`
@@ -171,7 +188,7 @@ preparing a run:
    python -c "
    import sys; sys.path.insert(0, '$SKILL_DIR/scripts')
    import spec_lib, json
-   preset = spec_lib.load_preset('side-scroller')
+   preset = spec_lib.load_preset('side-action-toon3')
    spec = spec_lib.resolve_spec(preset, {})
    print(json.dumps({'states': [(s['name'], s['frames']) for s in spec['states']], 'mode': spec['mode'], 'cell': spec['cell'], 'proportion': spec['proportion']['id'], 'jobs': len(spec['states']) + 1}, indent=2))
    "
@@ -283,7 +300,7 @@ restarting the whole checklist.
 ```bash
 SKILL_DIR="${CODEX_HOME:-$HOME/.codex}/skills/sprite-gen"
 python "$SKILL_DIR/scripts/prepare_sprite_run.py" \
-  --preset side-scroller \
+  --preset side-action-toon3 \
   --character-name "<Name>" \
   --description "<one sentence>" \
   --reference /absolute/path/to/reference.png \

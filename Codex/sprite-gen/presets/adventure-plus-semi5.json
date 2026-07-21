@@ -1,0 +1,105 @@
+{
+  "preset_id": "adventure-plus-semi5",
+  "description": "Semi-realistic point-and-click adventure character, advanced move set: pickup, use, push, look, sit.",
+  "mode": "hires",
+  "cell": {
+    "width": 192,
+    "height": 250
+  },
+  "proportion": "semi-5",
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "genre": "adventure",
+  "tier": "plus",
+  "view": "side",
+  "tags": [
+    "side-view",
+    "point-and-click",
+    "hires",
+    "plus"
+  ],
+  "states": [
+    {
+      "name": "pickup",
+      "frames": 3,
+      "durations_ms": {
+        "each": 160,
+        "last": 230
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Item pickup: crouch down, grasp, and rise holding an unseen item close to the body. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "Show only the picking-up motion; do not draw the item itself.",
+        "Start from standing and end standing, holding the pose that implies a held item.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "use",
+      "frames": 3,
+      "durations_ms": {
+        "each": 170,
+        "last": 230
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Item-use gesture: reach forward and interact with an unseen object at chest height, pose only. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "Show only the reaching-and-interacting motion; do not draw the object itself.",
+        "Character faces the viewer or slightly to the side in every frame.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "push",
+      "frames": 3,
+      "durations_ms": {
+        "each": 180,
+        "last": 180
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Pushing loop: a braced forward lean and alternating short steps against unseen resistance, viewed from the side. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "The row must unmistakably face right, viewed from the side.",
+        "Show a forward-leaning braced posture with small alternating steps.",
+        "Do not draw the pushed object itself.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "look",
+      "frames": 2,
+      "durations_ms": {
+        "each": 360,
+        "last": 360
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Looking/examining pose: a head tilt and lean toward an unseen object of interest, with a small shift between the two frames. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "Character faces the viewer or slightly to the side in both frames.",
+        "Keep the pose nearly identical between frames aside from the small head/lean shift.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "sit",
+      "frames": 2,
+      "durations_ms": {
+        "each": 420,
+        "last": 420
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Sitting idle: a settled seated pose with a very small breathing shift between two nearly identical frames. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "Character is seated in a stable pose in both frames.",
+        "Keep the pose nearly identical between frames aside from the subtle idle motion.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    }
+  ]
+}
