@@ -7,6 +7,10 @@
   "anchor": "bottom-center",
   "effects_default": "none",
   "chroma_key": "auto",
+  "genre": "mascot",
+  "tier": "base",
+  "view": "side",
+  "tags": ["side-view", "hires", "regression"],
   "states": [
     {
       "name": "idle",

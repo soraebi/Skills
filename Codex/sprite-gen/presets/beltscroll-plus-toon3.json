@@ -1,0 +1,125 @@
+{
+  "preset_id": "beltscroll-plus-toon3",
+  "description": "Toon beat-em-up brawler character, advanced move set: jump, air-attack, grab, throw, pickup, carry.",
+  "mode": "pixel",
+  "logical_size": 48,
+  "proportion": "toon-3",
+  "palette_colors": 24,
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "genre": "beltscroll",
+  "tier": "plus",
+  "view": "side",
+  "tags": [
+    "side-view",
+    "beat-em-up",
+    "pixel",
+    "plus"
+  ],
+  "states": [
+    {
+      "name": "jump",
+      "frames": 4,
+      "durations_ms": {
+        "each": 140,
+        "last": 230
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Jump arc through pose and vertical body position only: anticipation, lift, airborne peak, and descent. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Show the jump through pose and vertical body position only.",
+        "Do not draw ground shadows, contact shadows, drop shadows, dust, or landing marks.",
+        "Keep the background outside the character perfectly flat chroma key with no darker key-colored patches.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "air-attack",
+      "frames": 4,
+      "durations_ms": [
+        90,
+        80,
+        110,
+        170
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Airborne attack: windup, strike, and follow-through while airborne, through pose and an attached impact effect only. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Show the character airborne in every frame; do not include ground contact.",
+        "Any impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached impact stars, motion lines, or afterimages.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "grab",
+      "frames": 3,
+      "durations_ms": {
+        "each": 150,
+        "last": 230
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Grab reach: extend arms forward and close onto an unseen opponent, pose only. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Show only the reach-and-clamp motion; do not draw a second character or opponent.",
+        "The row must unmistakably face right, viewed from the side.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "throw",
+      "frames": 4,
+      "durations_ms": [
+        100,
+        90,
+        110,
+        180
+      ],
+      "loop": false,
+      "effects": "none",
+      "action": "Throw follow-through: pivot, heave, and release, ending in a recovery stance. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Show only the throwing character's motion; do not draw a second character or thrown object.",
+        "The row must unmistakably face right, viewed from the side.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "pickup",
+      "frames": 3,
+      "durations_ms": {
+        "each": 160,
+        "last": 230
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Item pickup: crouch down, grasp, and rise holding an unseen item close to the body. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Show only the picking-up motion; do not draw the item itself.",
+        "Start from standing and end standing, holding the pose that implies a held item.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "carry",
+      "frames": 4,
+      "durations_ms": {
+        "each": 170,
+        "last": 170
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Carrying walk cycle: alternating stride while holding an unseen item or opponent against the body. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "The row must unmistakably face and travel right, viewed from the side.",
+        "The stride must visibly alternate across the frames instead of repeating one static pose.",
+        "Do not draw the carried item or opponent itself; show only the carrying posture.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    }
+  ]
+}

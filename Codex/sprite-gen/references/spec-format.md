@@ -27,7 +27,7 @@ from a run directory without touching a preset again.
 ```jsonc
 {
   "schema_version": 1,
-  "provenance": {"preset_id": "side-scroller", "cli_overrides": {"mode": "pixel"}},
+  "provenance": {"preset_id": "side-action-toon3", "cli_overrides": {"mode": "pixel"}},
   "mode": "pixel | hires",
   "cell": {"width": 32, "height": 32},          // final (1x logical) frame size
   "working_cell": {"width": 192, "height": 192},// extraction-resolution frame size
@@ -97,6 +97,28 @@ from a run directory without touching a preset again.
   than a cycle. It changes preview-GIF timing (see below) and QA expectations
   (no loop-pop check; the last frame is treated as a held end pose), not the
   `durations_ms` values themselves.
+
+## Preset metadata fields (tool-only, not read by the pipeline)
+
+A bundled preset's authoring JSON may carry four extra top-level fields:
+`genre` (a short slug such as `side-action` or `topdown-rpg`), `tier` (`base`
+or `plus`), `view` (`side`, `top-down`, or `isometric`), and `tags` (a list of
+free-form strings). `tools/generate_presets.py` builds `tags` as the family's
+own descriptive tags plus `mode` plus `tier`, e.g. `topdown-rpg-toon3` (a
+`base`-tier pixel preset) gets `["top-down", "4-dir", "pixel", "base"]`.
+`proportion` doubles as the de facto proportion/body-size facet alongside
+these four.
+
+None of `spec_lib.py`, `prepare_sprite_run.py`, or any other pipeline script
+reads these fields -- `_validate_preset_shape`/`resolve_spec`/`validate_spec`
+only ever look at the keys they know about and silently ignore unknown
+top-level keys, so adding them is safe. They exist purely for external
+tooling that lists or filters presets (for example the codex-image-studio
+`sprite-gen` plugin's preset picker) to group/filter by genre, tier, view, or
+tag without having to parse preset ids or state names. `tools/generate_presets.py`
+is the single source of truth for the 48 genre x tier x proportion presets and
+always sets all four fields; hand-authored custom `--spec` files may omit them
+freely since the pipeline does not require them.
 
 ## Preset authoring conventions
 

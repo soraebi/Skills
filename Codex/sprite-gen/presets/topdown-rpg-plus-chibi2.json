@@ -1,0 +1,160 @@
+{
+  "preset_id": "topdown-rpg-plus-chibi2",
+  "description": "Chibi top-down 4-direction RPG character, advanced move set: slash-down, slash-up, slash-right, slash-left, cast-down, hurt, death.",
+  "mode": "pixel",
+  "logical_size": 32,
+  "proportion": "chibi-2",
+  "palette_colors": 24,
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "genre": "topdown-rpg",
+  "tier": "plus",
+  "view": "top-down",
+  "tags": [
+    "top-down",
+    "4-dir",
+    "pixel",
+    "plus"
+  ],
+  "states": [
+    {
+      "name": "slash-down",
+      "frames": 4,
+      "durations_ms": [
+        90,
+        80,
+        110,
+        160
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Facing-down melee slash: windup, strike, and follow-through through pose and an attached weapon effect only, viewed from the front. Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail.",
+      "requirements": [
+        "Character faces straight down (toward the viewer) in every frame.",
+        "Any weapon trail or impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached slash arcs, floating impact stars, or motion lines outside the silhouette.",
+        "Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail."
+      ]
+    },
+    {
+      "name": "slash-up",
+      "frames": 4,
+      "durations_ms": [
+        90,
+        80,
+        110,
+        160
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Facing-up melee slash: windup, strike, and follow-through through pose and an attached weapon effect only, viewed from behind. Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail.",
+      "requirements": [
+        "Character faces straight up (away from the viewer, back visible) in every frame.",
+        "Any weapon trail or impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached slash arcs, floating impact stars, or motion lines outside the silhouette.",
+        "Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail."
+      ]
+    },
+    {
+      "name": "slash-right",
+      "frames": 4,
+      "durations_ms": [
+        90,
+        80,
+        110,
+        160
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Rightward melee slash: windup, strike, and follow-through through pose and an attached weapon effect only, viewed from the side. Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail.",
+      "requirements": [
+        "The row must unmistakably face right, viewed from the side.",
+        "Any weapon trail or impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached slash arcs, floating impact stars, or motion lines outside the silhouette.",
+        "Avoid asymmetric costume details, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail."
+      ]
+    },
+    {
+      "name": "slash-left",
+      "frames": 4,
+      "durations_ms": [
+        90,
+        80,
+        110,
+        160
+      ],
+      "loop": false,
+      "effects": "attached",
+      "mirror_of": {
+        "source": "slash-right",
+        "transform": "framewise-horizontal-mirror-preserving-order",
+        "requires_explicit_approval": true
+      },
+      "action": "Leftward melee slash: windup, strike, and follow-through through pose and an attached weapon effect only, viewed from the side. Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail.",
+      "requirements": [
+        "The row must unmistakably face left, viewed from the side.",
+        "Any weapon trail or impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached slash arcs, floating impact stars, or motion lines outside the silhouette.",
+        "Avoid asymmetric costume details, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail."
+      ]
+    },
+    {
+      "name": "cast-down",
+      "frames": 5,
+      "durations_ms": {
+        "each": 150,
+        "last": 220
+      },
+      "loop": false,
+      "effects": "attached",
+      "action": "Facing-down spellcast: raise arms or a prop, channel briefly, and release, viewed from the front. Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail.",
+      "requirements": [
+        "Character faces straight down (toward the viewer) in every frame.",
+        "Any attached casting effect (e.g. a small glimmer at the hands or prop tip) must stay opaque, hard-edged, and physically overlapping the silhouette.",
+        "Do not draw detached magic circles, floating runes, particle bursts, or glow halos.",
+        "Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail."
+      ]
+    },
+    {
+      "name": "hurt",
+      "frames": 3,
+      "durations_ms": {
+        "each": 100,
+        "last": 180
+      },
+      "loop": false,
+      "effects": "attached",
+      "action": "Facing-down hit reaction: impact flinch, recoil, and recovery. Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail.",
+      "requirements": [
+        "Character faces straight down (toward the viewer) in every frame.",
+        "Any attached impact flash or stars must overlap the silhouette and stay inside the same frame slot.",
+        "Do not draw detached stars, floating symbols, or separate impact bursts.",
+        "Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail."
+      ]
+    },
+    {
+      "name": "death",
+      "frames": 6,
+      "durations_ms": [
+        120,
+        120,
+        140,
+        160,
+        200,
+        260
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Facing-down death sequence: impact, stagger, collapse, and a held final defeated pose. Not a loop; the last frame is the resting end state. Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail.",
+      "requirements": [
+        "Character faces straight down (toward the viewer) through the sequence.",
+        "The final frame must be a stable, held defeated pose suitable as an animation end state, not a mid-motion frame.",
+        "Do not draw detached dust clouds, floating symbols, or ground cracks outside the silhouette.",
+        "Proportion-appropriate motion for chibi build: exaggerated bouncy motion, big head stays readable, minimal limb detail."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "preset_id": "shmup-plus-semi5",
+  "description": "Semi-realistic top-down shoot-em-up player ship, advanced move set: boost, charge, barrel-roll, transform. Proportion affects hull/cockpit detail density, not humanoid motion.",
+  "mode": "hires",
+  "cell": {
+    "width": 192,
+    "height": 250
+  },
+  "proportion": "semi-5",
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "genre": "shmup",
+  "tier": "plus",
+  "view": "top-down",
+  "tags": [
+    "top-down",
+    "shmup",
+    "hires",
+    "plus"
+  ],
+  "states": [
+    {
+      "name": "boost",
+      "frames": 3,
+      "durations_ms": {
+        "each": 120,
+        "last": 180
+      },
+      "loop": false,
+      "effects": "attached",
+      "action": "Speed boost: a forward thruster surge shown through an attached engine-glow intensification and a slight forward lean of the hull. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "Any engine-glow intensification must be attached to and overlapping the ship silhouette, staying inside the same frame slot.",
+        "Do not draw detached exhaust trails, speed lines, or motion blur.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    },
+    {
+      "name": "charge",
+      "frames": 4,
+      "durations_ms": {
+        "each": 160,
+        "last": 230
+      },
+      "loop": false,
+      "effects": "attached",
+      "action": "Weapon charge-up: a building attached glow at the weapon mount, ending on a held bright final frame. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "The final frame must be a stable, held bright charge-complete state, not mid-motion.",
+        "Any charge glow must be attached to and overlapping the ship silhouette, staying inside the same frame slot.",
+        "Do not draw detached particle bursts or floating glow effects.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    },
+    {
+      "name": "barrel-roll",
+      "frames": 6,
+      "durations_ms": {
+        "each": 100,
+        "last": 150
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Barrel roll: a full rotation of the ship silhouette around its forward axis, viewed from above. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "Show a complete rotation across the frames, starting and ending near the level-flight silhouette.",
+        "Do not draw motion blur, trails, or background scenery.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    },
+    {
+      "name": "transform",
+      "frames": 5,
+      "durations_ms": {
+        "each": 150,
+        "last": 230
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Transformation sequence: the ship reconfigures through intermediate silhouette poses to a held final form. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "The final frame must be a stable, held transformed end state, not mid-motion.",
+        "Show the reconfiguration through silhouette changes only; do not draw detached mechanical effects or particle bursts.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    }
+  ]
+}

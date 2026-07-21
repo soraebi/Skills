@@ -1,0 +1,124 @@
+{
+  "preset_id": "side-action-plus-toon3",
+  "description": "Toon side-scrolling action platformer character, advanced move set: dash, roll, wall-slide, climb, crouch, air-attack.",
+  "mode": "pixel",
+  "logical_size": 48,
+  "proportion": "toon-3",
+  "palette_colors": 24,
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "genre": "side-action",
+  "tier": "plus",
+  "view": "side",
+  "tags": [
+    "side-view",
+    "platformer",
+    "pixel",
+    "plus"
+  ],
+  "states": [
+    {
+      "name": "dash",
+      "frames": 4,
+      "durations_ms": {
+        "each": 90,
+        "last": 140
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Forward dash burst: low lean into a quick forward thrust, then a brief recovery lean. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Show the dash through body lean and stride length only.",
+        "The row must unmistakably face and travel right.",
+        "Do not draw speed lines, motion trails, afterimages, or dust.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "roll",
+      "frames": 5,
+      "durations_ms": {
+        "each": 90,
+        "last": 140
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Forward evasive roll: tuck, tumble through the roll, and recovery to standing, viewed from the side. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "The row must unmistakably face and travel right.",
+        "Show the roll through body curl and rotation only.",
+        "Do not draw motion trails, dust, or afterimages.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "wall-slide",
+      "frames": 2,
+      "durations_ms": {
+        "each": 320,
+        "last": 320
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Wall-slide hold: braced against a vertical surface to the right, a slow controlled slip pose. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Character is pressed against a vertical surface, side-on to the viewer, in a braced pose.",
+        "Keep the pose nearly identical between the two frames aside from a subtle slip motion.",
+        "Do not draw the wall surface itself, sparks, or scrape marks.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "climb",
+      "frames": 4,
+      "durations_ms": {
+        "each": 160,
+        "last": 160
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Climbing cycle: alternating hand-over-hand reach and leg push on a vertical surface, viewed from the side. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Show climbing through arm reach and leg push only; do not draw the climbed surface itself.",
+        "The cadence must visibly alternate across the frames instead of repeating one static pose.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "crouch",
+      "frames": 2,
+      "durations_ms": {
+        "each": 360,
+        "last": 360
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Crouching hold: a low compact stance with a small breathing shift between two nearly identical poses. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Keep the character in a low crouched stance in both frames.",
+        "The two frames should be visually close so the loop does not pop.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    },
+    {
+      "name": "air-attack",
+      "frames": 4,
+      "durations_ms": [
+        90,
+        80,
+        110,
+        170
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Airborne attack: windup, strike, and follow-through while airborne, through pose and an attached weapon/limb effect only. Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration.",
+      "requirements": [
+        "Show the character airborne in every frame; do not include ground contact.",
+        "Any weapon trail or impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached slash arcs, floating impact stars, or motion lines outside the silhouette.",
+        "Proportion-appropriate motion for toon build: clear cartoon silhouettes, moderate exaggeration."
+      ]
+    }
+  ]
+}
