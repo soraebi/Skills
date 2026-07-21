@@ -1,0 +1,122 @@
+{
+  "preset_id": "iso-sim-real7",
+  "description": "Realistic isometric tactics/sim character, base movement/action set: idle-se, walk-se, walk-ne, walk-sw, walk-nw.",
+  "mode": "hires",
+  "cell": {
+    "width": 192,
+    "height": 288
+  },
+  "proportion": "realistic-7",
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "genre": "iso-sim",
+  "tier": "base",
+  "view": "isometric",
+  "tags": [
+    "isometric",
+    "tactics",
+    "hires",
+    "base"
+  ],
+  "states": [
+    {
+      "name": "idle-se",
+      "frames": 3,
+      "durations_ms": {
+        "each": 420,
+        "last": 420
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Isometric idle loop facing south-east (diagonally toward the viewer and to the right): subtle breathing and a tiny sway between nearly identical poses. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces south-east (diagonally toward the viewer, foreground-facing) in every frame.",
+        "Keep the pose, silhouette, and palette essentially identical between frames aside from the subtle idle motion.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    },
+    {
+      "name": "walk-se",
+      "frames": 4,
+      "durations_ms": {
+        "each": 150,
+        "last": 150
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "South-east walk cycle: alternating stride through legs and arms only, viewed on the isometric diagonal toward the viewer. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces and moves south-east (diagonally toward the viewer and to the right) in every frame.",
+        "The stride must visibly alternate across the frames instead of repeating one static pose.",
+        "Do not draw floor shadows, dust, or motion trails.",
+        "Avoid asymmetric costume details, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    },
+    {
+      "name": "walk-ne",
+      "frames": 4,
+      "durations_ms": {
+        "each": 150,
+        "last": 150
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "North-east walk cycle: alternating stride through legs and arms only, viewed on the isometric diagonal away from the viewer. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces and moves north-east (diagonally away from the viewer and to the right, back mostly visible) in every frame.",
+        "The stride must visibly alternate across the frames instead of repeating one static pose.",
+        "Do not draw floor shadows, dust, or motion trails.",
+        "Avoid asymmetric costume details, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    },
+    {
+      "name": "walk-sw",
+      "frames": 4,
+      "durations_ms": {
+        "each": 150,
+        "last": 150
+      },
+      "loop": true,
+      "effects": "none",
+      "mirror_of": {
+        "source": "walk-se",
+        "transform": "framewise-horizontal-mirror-preserving-order",
+        "requires_explicit_approval": true
+      },
+      "action": "South-west walk cycle: alternating stride through legs and arms only, viewed on the isometric diagonal toward the viewer. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces and moves south-west (diagonally toward the viewer and to the left) in every frame.",
+        "The stride must visibly alternate across the frames instead of repeating one static pose.",
+        "Do not draw floor shadows, dust, or motion trails.",
+        "Avoid asymmetric costume details, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    },
+    {
+      "name": "walk-nw",
+      "frames": 4,
+      "durations_ms": {
+        "each": 150,
+        "last": 150
+      },
+      "loop": true,
+      "effects": "none",
+      "mirror_of": {
+        "source": "walk-ne",
+        "transform": "framewise-horizontal-mirror-preserving-order",
+        "requires_explicit_approval": true
+      },
+      "action": "North-west walk cycle: alternating stride through legs and arms only, viewed on the isometric diagonal away from the viewer. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
+      "requirements": [
+        "Character faces and moves north-west (diagonally away from the viewer and to the left, back mostly visible) in every frame.",
+        "The stride must visibly alternate across the frames instead of repeating one static pose.",
+        "Do not draw floor shadows, dust, or motion trails.",
+        "Avoid asymmetric costume details, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "preset_id": "shmup-semi5",
+  "description": "Semi-realistic top-down shoot-em-up player ship, base movement/action set: idle, bank-right, bank-left, fire, hit, explosion. Proportion affects hull/cockpit detail density, not humanoid motion.",
+  "mode": "hires",
+  "cell": {
+    "width": 192,
+    "height": 250
+  },
+  "proportion": "semi-5",
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "genre": "shmup",
+  "tier": "base",
+  "view": "top-down",
+  "tags": [
+    "top-down",
+    "shmup",
+    "hires",
+    "base"
+  ],
+  "states": [
+    {
+      "name": "idle",
+      "frames": 2,
+      "durations_ms": {
+        "each": 420,
+        "last": 420
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Level-flight idle loop: a subtle engine-glow flicker while the ship holds level, viewed from directly above. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "Ship faces toward the top of frame (nose away from the viewer) in every frame, viewed from directly above.",
+        "Keep the silhouette and palette essentially identical between frames aside from the subtle idle motion.",
+        "Do not draw exhaust trails, motion blur, or background scenery.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    },
+    {
+      "name": "bank-right",
+      "frames": 3,
+      "durations_ms": {
+        "each": 160,
+        "last": 160
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Rightward bank loop: the ship tilts and rolls toward its right wing while holding forward heading, viewed from above. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "Ship faces toward the top of frame while visibly banking to the right, viewed from directly above.",
+        "Keep the forward heading constant; show only the bank/roll tilt.",
+        "Do not draw exhaust trails, motion blur, or background scenery.",
+        "Avoid asymmetric hull markings, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    },
+    {
+      "name": "bank-left",
+      "frames": 3,
+      "durations_ms": {
+        "each": 160,
+        "last": 160
+      },
+      "loop": true,
+      "effects": "none",
+      "mirror_of": {
+        "source": "bank-right",
+        "transform": "framewise-horizontal-mirror-preserving-order",
+        "requires_explicit_approval": true
+      },
+      "action": "Leftward bank loop: the ship tilts and rolls toward its left wing while holding forward heading, viewed from above. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "Ship faces toward the top of frame while visibly banking to the left, viewed from directly above.",
+        "Keep the forward heading constant; show only the bank/roll tilt.",
+        "Do not draw exhaust trails, motion blur, or background scenery.",
+        "Avoid asymmetric hull markings, insignia, or text so the mirrored row stays plausible.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    },
+    {
+      "name": "fire",
+      "frames": 3,
+      "durations_ms": [
+        80,
+        80,
+        160
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Weapon fire: a brief attached muzzle flash at the ship's weapon mount, pose held steady. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "Any muzzle flash or attached weapon effect must be opaque, hard-edged, physically overlapping the ship silhouette, and stay inside the same frame slot.",
+        "Do not draw detached projectiles, beams, or floating effects separate from the ship.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    },
+    {
+      "name": "hit",
+      "frames": 2,
+      "durations_ms": [
+        130,
+        220
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Impact reaction: a brief attached spark or scorch flash and a small shudder in the ship's pose. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "Any spark or scorch flash must be attached to and overlapping the ship silhouette, staying inside the same frame slot.",
+        "Do not draw detached sparks, debris, or floating impact marks.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    },
+    {
+      "name": "explosion",
+      "frames": 7,
+      "durations_ms": [
+        80,
+        80,
+        90,
+        90,
+        110,
+        130,
+        220
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Destruction sequence: escalating attached explosion flashes consuming the ship silhouette, ending on a held final burst frame. Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling.",
+      "requirements": [
+        "The final frame must be a stable, held explosion-consumed end state, not mid-motion.",
+        "Any explosion flash or debris must overlap the ship silhouette and stay inside the same frame slot.",
+        "Do not draw detached fireballs, floating debris, or explosion marks outside the silhouette.",
+        "Proportion-appropriate design density for semi-realistic build: balanced hull detail with realistic paneling and moderate greebling."
+      ]
+    }
+  ]
+}

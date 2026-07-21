@@ -1,0 +1,171 @@
+{
+  "preset_id": "beltscroll-semi5",
+  "description": "Semi-realistic beat-em-up brawler character, base movement/action set: idle, walk, punch-combo, kick, hurt, knockdown, get-up, death.",
+  "mode": "hires",
+  "cell": {
+    "width": 192,
+    "height": 250
+  },
+  "proportion": "semi-5",
+  "anchor": "bottom-center",
+  "effects_default": "none",
+  "chroma_key": "auto",
+  "genre": "beltscroll",
+  "tier": "base",
+  "view": "side",
+  "tags": [
+    "side-view",
+    "beat-em-up",
+    "hires",
+    "base"
+  ],
+  "states": [
+    {
+      "name": "idle",
+      "frames": 3,
+      "durations_ms": {
+        "each": 420,
+        "last": 420
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Standing idle loop: subtle breathing, a tiny blink, and a very small body bob; essentially the same pose and facing in every frame. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "Character faces right in a clean side profile in every frame.",
+        "Keep the pose, silhouette, and palette essentially identical between frames aside from the subtle idle motion.",
+        "Feet stay planted.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "walk",
+      "frames": 4,
+      "durations_ms": {
+        "each": 150,
+        "last": 150
+      },
+      "loop": true,
+      "effects": "none",
+      "action": "Rightward walk cycle: alternating stride through legs and arms only, viewed from the side. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "The row must unmistakably face and travel right, viewed from the side.",
+        "The stride must visibly alternate across the frames instead of repeating one static pose.",
+        "Do not draw floor shadows, dust, or motion trails.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "punch-combo",
+      "frames": 6,
+      "durations_ms": [
+        80,
+        70,
+        70,
+        90,
+        90,
+        160
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Punch combo: a chained sequence of jabs through windup, strikes, and recovery, through pose and an attached impact effect only. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "The row must unmistakably face right, viewed from the side.",
+        "Any impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached impact stars, motion lines, or afterimages.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "kick",
+      "frames": 4,
+      "durations_ms": [
+        90,
+        80,
+        110,
+        170
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Kick strike: windup, extension, impact, and recovery through pose and an attached impact effect only. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "The row must unmistakably face right, viewed from the side.",
+        "Any impact flash must be physically attached to or overlapping the character silhouette and stay inside the same frame slot.",
+        "Do not draw detached impact stars, motion lines, or afterimages.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "hurt",
+      "frames": 3,
+      "durations_ms": {
+        "each": 100,
+        "last": 180
+      },
+      "loop": false,
+      "effects": "attached",
+      "action": "Hit reaction: impact flinch, recoil, and recovery. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "Show impact through pose only: flinch, recoil, brief off-balance lean, then recovery.",
+        "Any attached impact flash must overlap the silhouette and stay inside the same frame slot.",
+        "Do not draw detached stars, floating symbols, or separate impact bursts.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "knockdown",
+      "frames": 4,
+      "durations_ms": [
+        100,
+        120,
+        140,
+        220
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Knockdown impact: stagger, fall, and a held final sprawled pose on the ground. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "The final frame must be a stable, held sprawled pose suitable as an animation end state, not a mid-motion frame.",
+        "Any attached impact effect must overlap the silhouette and stay inside the same frame slot.",
+        "Do not draw detached dust clouds, floating symbols, or ground cracks outside the silhouette.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "get-up",
+      "frames": 4,
+      "durations_ms": {
+        "each": 150,
+        "last": 230
+      },
+      "loop": false,
+      "effects": "none",
+      "action": "Recovery get-up: push off the ground, rise through a crouch, and return to a standing stance. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "Start from a grounded pose and end standing.",
+        "Do not draw ground shadows, dust, or impact marks.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    },
+    {
+      "name": "death",
+      "frames": 6,
+      "durations_ms": [
+        120,
+        120,
+        140,
+        160,
+        200,
+        260
+      ],
+      "loop": false,
+      "effects": "attached",
+      "action": "Death sequence: impact, stagger, collapse, and a held final defeated pose. Not a loop; the last frame is the resting end state. Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride.",
+      "requirements": [
+        "The final frame must be a stable, held defeated pose suitable as an animation end state, not a mid-motion frame.",
+        "Any attached dust or impact effect must overlap the silhouette and stay inside the same frame slot.",
+        "Do not draw detached dust clouds, floating symbols, or ground cracks outside the silhouette.",
+        "Proportion-appropriate motion for semi-realistic build: balanced stylized anatomy, moderate realistic stride."
+      ]
+    }
+  ]
+}
