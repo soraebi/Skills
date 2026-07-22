@@ -11,6 +11,7 @@
 - **等身の選択**: `chibi-2` / `toon-3` / `semi-5` / `realistic-7`(頭身比がプロンプトとセル縦横比の既定値に反映)
 - **ゲーム向けアンカリング**: bottom-center アンカー+ベースライン安定のフレーム抽出(ゲーム内でのジッタを防止)
 - **ミラー派生**: `walk-left` を `walk-right` のフレーム単位ミラーとして宣言可能(時間順序を保持・明示承認ゲート付き)
+- **低姿勢状態のスケール制御**: しゃがみ等で生成モデルがキャラをセルいっぱいに拡大描画してしまう問題への3機構 — `max_height_ratio`(レイアウトガイドに最大身長帯を描画)/ `scale_reference_state`(承認済み行をスケール参照として添付)/ `content_scale`(修復用の決定論的な一様縮小・bottom-center)。詳細は `references/spec-format.md`
 - **エンジン非依存のエクスポート**: `spritesheet.png/webp` + TexturePacker hash 形式の `spritesheet.json`(Phaser / PixiJS でそのまま読込可)+ `animations.json`(状態毎のフレーム・表示時間・ループフラグ・アンカー)+ 任意で状態別ストリップと整数拡大 `@Nx` ペア
 - **同梱プリセット**: 6ジャンル × tier(base/plus) × 4等身 = 48種の生成プリセット(`tools/generate_presets.py` による機械生成、詳細は下表)に加え、`minimal`(動作確認用)・`codex-pet`(hatch-pet回帰確認用)
 - **QAと修復ループ**: コンタクトシート・状態別GIFプレビュー・決定論的検証・最小スコープの行単位修復

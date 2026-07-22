@@ -97,6 +97,84 @@ from a run directory without touching a preset again.
   than a cycle. It changes preview-GIF timing (see below) and QA expectations
   (no loop-pop check; the last frame is treated as a held end pose), not the
   `durations_ms` values themselves.
+- **`max_height_ratio`, `scale_reference_state`, `content_scale`**: optional,
+  per-state fields that address a recurring `$imagegen` failure mode where a
+  low-stance pose (e.g. `crouch`) gets drawn enlarged to fill its layout-guide
+  cell instead of matching the character's established scale. All three are
+  carried through `resolve_spec` into the resolved spec only when the
+  authoring state actually sets them (a state that omits them keeps the exact
+  same resolved shape it always has). See "Scale-lock repair fields" below.
+
+## Scale-lock repair fields
+
+These three fields work together across generation-side prompting/layout and
+a deterministic post-generation repair pass; a state may use any subset.
+
+- **`max_height_ratio`** (number, `>= 0.3` and `< 1.0`): shrinks a state's
+  layout-guide safe rectangle so the tallest allowed silhouette is
+  `max_height_ratio` times the normal safe height, keeping the same ground
+  line (ratio applies to the *top* edge only). `1.0` is rejected by
+  `validate_spec`: it would be a geometric no-op on the safe rectangle itself
+  (the top edge would not move) while still changing the guide's omitted
+  center line and the job's "maximum character height" role text, so a state
+  that means "no height cap" should omit the field instead of setting it to
+  `1.0`. `prepare_sprite_run.py` also omits that state's guide's horizontal
+  center line (a max-height ceiling and a vertical-centering hint would
+  contradict each other) and appends "and maximum character height; keep all
+  character pixels below the upper boundary, leave the upper band empty" to
+  that state's layout-guide job input role text.
+- **`scale_reference_state`** (string): names another, already-generated,
+  non-mirror state in the same spec whose decoded row strip is attached to
+  this state's row job as an approved absolute-scale reference, and whose
+  job id is added to this state's `depends_on`. The row prompt (both the
+  first-attempt and retry prompt) gets an additional "Absolute scale lock"
+  paragraph instructing the model to match the reference's head diameter,
+  shoulder width, torso width, hands, feet, and outline thickness rather than
+  enlarging the pose to fill the slot; the paragraph's "maximum-height
+  boundary" sentence is only included when the same state also sets
+  `max_height_ratio` (see "may use any subset" above -- a state without a
+  height cap has no such boundary to point at). Validation requires the
+  target to exist, to not be the state itself, to not itself be a mirror
+  state (`mirror_of`), and to not itself have a `scale_reference_state` set
+  (chained or mutual scale references, e.g. A -> B -> A or A -> B -> C, are
+  rejected; the target must be a plain, already-approved reference row). A
+  state that is itself a mirror cannot set `scale_reference_state` either,
+  and `tools/generate_presets.py` never copies `scale_reference_state` onto a
+  mirror-derived state (`max_height_ratio` may still be copied).
+- **`content_scale`** (number, `0.5`-`1.0`): a deterministic, repair-only
+  uniform scale-down applied to every frame of the state during
+  post-generation processing -- a corrective normalization of real generated
+  pixels, not new content (see the `SKILL.md` Rules section). In pixel mode,
+  `pixelize_frames.py` folds it into the existing working-resolution ->
+  logical-cell BOX downscale: instead of resizing straight to `cell`, it
+  resizes directly to `round(cell * content_scale)` in the same BOX pass,
+  then bottom-center-composites that onto the full logical cell (binarization
+  happens before the composite, so quantization still only ever sees final
+  alpha, as always). This means a `content_scale` other than `1.0` makes that
+  one state's working-resolution -> logical-cell step a non-integer-ratio BOX
+  resize, unlike every other state's exact-integer `working_multiplier`
+  downscale; this is an accepted, deliberate trade-off for this repair-only
+  path (a small extra softening on a single problem row), not a general
+  relaxation of pixel mode's usual exact-integer-downscale assumption. In
+  hires mode, `extract_strip_frames.py` applies the same bottom-center
+  scale-down as a post-process after its normal extraction
+  (`stable-slots`/`components`/`slots`), since hires extraction has no single
+  shared resize step to fold it into and `pixelize_frames.py` stays a no-op
+  for hires. Both paths record the applied factor as `content_scale` on that
+  state's row entry in `frames-logical/frames-logical-manifest.json` (pixel
+  mode) or `frames/frames-manifest.json` (hires mode) only when a scale-down
+  was actually applied (`content_scale != 1.0`); a state whose `content_scale`
+  happens to resolve to exactly `1.0` gets no manifest entry, since no resize
+  occurred.
+
+Example (`side-action-plus-*`'s `crouch` state, generated by
+`tools/generate_presets.py`): `max_height_ratio: 0.62` and
+`scale_reference_state: "dash"` (the family's standing/moving-scale row),
+paired with a requirements sentence telling the model the lower stance must
+come from bent knees and hip drop rather than a larger drawing. `dash` (and
+every other row) is unaffected -- these fields are opt-in per state, so a
+family/tier/proportion combination that doesn't set them resolves and
+generates exactly as before.
 
 ## Preset metadata fields (tool-only, not read by the pipeline)
 
@@ -177,6 +255,13 @@ is never done automatically.
   needs an exact integer factor; hires mode has no such constraint since it has
   no downscale-to-logical step)
 - atlas total pixels (`atlas.width * atlas.height`) `<= 16,000,000`
+- `max_height_ratio`, if present: number `>= 0.3` and `< 1.0` (`1.0` itself
+  is rejected as a geometric no-op that still changes guide/prompt output)
+- `content_scale`, if present: number between `0.5` and `1.0`
+- `scale_reference_state`, if present: must name an existing state, not
+  itself, not a mirror state, and not a state that itself has a
+  `scale_reference_state` (no chains or mutual references); a mirror state
+  cannot set it either
 
 ## Preview GIF timing
 
