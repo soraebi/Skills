@@ -9,11 +9,16 @@
 - **コンフィグ駆動のアニメーション仕様**: 状態・フレーム数・フレーム毎の表示時間・アトラスグリッド・セルサイズを解決済みスペック(`sprite_request.json`)で一元管理 — 全スクリプトの単一情報源
 - **2つのレンダーモード**: `pixel`(16/32/64px 等の論理ピクセルサイズ。高解像度で生成し、グローバルパレットで決定論的にピクセライズ)と `hires`
 - **等身の選択**: `chibi-2` / `toon-3` / `semi-5` / `realistic-7`(頭身比がプロンプトとセル縦横比の既定値に反映)
-- **ゲーム向けアンカリング**: bottom-center アンカー+ベースライン安定のフレーム抽出(ゲーム内でのジッタを防止)
-- **ミラー派生**: `walk-left` を `walk-right` のフレーム単位ミラーとして宣言可能(時間順序を保持・明示承認ゲート付き)
-- **低姿勢状態のスケール制御**: しゃがみ等で生成モデルがキャラをセルいっぱいに拡大描画してしまう問題への3機構 — `max_height_ratio`(レイアウトガイドに最大身長帯を描画)/ `scale_reference_state`(承認済み行をスケール参照として添付)/ `content_scale`(修復用の決定論的な一様縮小・bottom-center)。詳細は `references/spec-format.md`
+- **ミラー派生**: `walk-left` を `walk-right` のフレーム単位ミラーとして宣言可能(時間順序を保持・明示承認ゲート付き)— 方向違いの行の画像生成コストを節約
 - **エンジン非依存のエクスポート**: `spritesheet.png/webp` + TexturePacker hash 形式の `spritesheet.json`(Phaser / PixiJS でそのまま読込可)+ `animations.json`(状態毎のフレーム・表示時間・ループフラグ・アンカー)+ 任意で状態別ストリップと整数拡大 `@Nx` ペア
 - **同梱プリセット**: 6ジャンル × tier(base/plus) × 4等身 = 48種の生成プリセット(`tools/generate_presets.py` による機械生成、詳細は下表)に加え、`minimal`(動作確認用)・`codex-pet`(hatch-pet回帰確認用)
+
+### 内部の仕組み(品質保証)
+
+生成結果の品質を担保するパイプライン内部の機構です。通常の利用で意識する必要はありません。
+
+- **ゲーム向けアンカリング**: bottom-center アンカー+ベースライン安定のフレーム抽出(ゲーム内でのジッタを防止)
+- **低姿勢状態のスケール制御**: しゃがみ等で生成モデルがキャラをセルいっぱいに拡大描画してしまう問題への3機構 — `max_height_ratio`(レイアウトガイドに最大身長帯を描画)/ `scale_reference_state`(承認済み行をスケール参照として添付)/ `content_scale`(修復用の決定論的な一様縮小・bottom-center)。詳細は `references/spec-format.md`
 - **QAと修復ループ**: コンタクトシート・状態別GIFプレビュー・決定論的検証・最小スコープの行単位修復
 
 ## 同梱プリセット一覧
@@ -52,20 +57,6 @@ base/plus を同一キャラで揃えたい場合は、両方の run で同じ `
 |---|---|---|---|---|
 | `minimal` | 動作確認・使い捨てNPC | pixel 32px / chibi-2 | idle(4), walk-right(6) | 3 |
 | `codex-pet` | hatch-pet(Codexアプリ固定ペット契約)との回帰確認専用 | hires 192×208 / chibi-2 | 9状態(hatch-petと同一幾何) | 10 |
-
-### 旧プリセットからの移行
-
-新体系への刷新に伴い、以下の5プリセットは削除されました。
-
-| 旧プリセット | 旧ジオメトリ | 移行先の目安 | 備考 |
-|---|---|---|---|
-| `rpg-4dir` | pixel 32px / toon-3 | `topdown-rpg-toon3` | 状態構成(idle-down + 4方向walk、left はミラー)がほぼ同一 |
-| `side-scroller` | hires 192×208 / toon-3 | `side-action-semi5`(base) | run/jump の状態分割が変更(jump→jump-rise/fall/land)。セルは192×250に変更 |
-| `platformer-hero` | hires 192×208 / toon-3 | `side-action-semi5`(base) | `side-scroller` と同じ移行先。idle/run/jump系/attack/hurt/death が再編統合 |
-| `platformer-moves` | hires 192×208 / toon-3 | `side-action-plus-semi5` | crouch/climb/dash/wall-slide は新setにそのまま存在。land は base 側に移動、air-attack が新規追加 |
-| `combat-actions` | hires 192×208 / toon-3 | `side-action-plus-semi5`(近似) | attack-combo は base の attack / plus の air-attack で代替可能だが、shoot・cast に直接対応する state は新体系になし。遠距離/魔法系の動作が必要な場合は `topdown-rpg-plus-*` や `iso-sim-plus-*` の cast/slash 系を参考にするか、`--spec` でカスタムspecを作成してください |
-
-後方互換のエイリアスは設けていません。旧IDを指定するランは失敗します。
 
 ## 動作要件
 
