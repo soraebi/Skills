@@ -282,6 +282,37 @@ def clear_transparent_rgb(image):
     return PILImage.frombytes("RGBA", rgba.size, bytes(data))
 
 
+def content_scaled_size(
+    cell_width: int, cell_height: int, content_scale: float | None
+) -> tuple[int, int]:
+    """Target (width, height) for a state's `content_scale` repair factor,
+    applied uniformly to both cell dimensions. Returns the unscaled cell size
+    when content_scale is absent or 1.0, so callers can treat "no scale" and
+    "scale of 1.0" identically without a branch of their own."""
+    if not content_scale or content_scale == 1.0:
+        return cell_width, cell_height
+    return (
+        max(1, round(cell_width * content_scale)),
+        max(1, round(cell_height * content_scale)),
+    )
+
+
+def bottom_center_place(scaled, cell_width: int, cell_height: int):
+    """Composite an already-scaled RGBA frame onto a fresh cell_width x
+    cell_height transparent canvas, horizontally centered and anchored to the
+    bottom edge (no extra padding -- the caller's own extraction/downscale
+    padding is already baked into `scaled`). Shared by pixelize_frames.py
+    (pixel mode) and extract_strip_frames.py (hires mode) so both apply
+    `content_scale` with the same anchor rule."""
+    from PIL import Image as PILImage
+
+    canvas = PILImage.new("RGBA", (cell_width, cell_height), (0, 0, 0, 0))
+    left = (cell_width - scaled.width) // 2
+    top = cell_height - scaled.height
+    canvas.alpha_composite(scaled, (left, max(0, top)))
+    return canvas
+
+
 def auto_display_scale(cell_width: int, cell_height: int, min_side: int) -> int:
     """Smallest positive integer upscale factor so the shorter cell side is
     at least `min_side` pixels when displayed (contact sheets / previews).
@@ -455,6 +486,22 @@ def _validate_preset_shape(preset: dict) -> list[str]:
             source = mirror_of.get("source")
             if not isinstance(source, str) or not source:
                 errors.append(f"state '{display_name}': mirror_of.source must be a non-empty string")
+
+        max_height_ratio = raw.get("max_height_ratio")
+        if max_height_ratio is not None and (
+            isinstance(max_height_ratio, bool) or not isinstance(max_height_ratio, (int, float))
+        ):
+            errors.append(f"state '{display_name}': 'max_height_ratio' must be a number")
+
+        scale_reference_state = raw.get("scale_reference_state")
+        if scale_reference_state is not None and not isinstance(scale_reference_state, str):
+            errors.append(f"state '{display_name}': 'scale_reference_state' must be a string")
+
+        content_scale = raw.get("content_scale")
+        if content_scale is not None and (
+            isinstance(content_scale, bool) or not isinstance(content_scale, (int, float))
+        ):
+            errors.append(f"state '{display_name}': 'content_scale' must be a number")
 
     return errors
 
@@ -687,19 +734,27 @@ def resolve_spec(
                     ),
                 }
 
-        resolved_states.append(
-            {
-                "name": name,
-                "row": row,
-                "frames": frames,
-                "durations_ms": durations_ms,
-                "loop": raw.get("loop", True),
-                "effects": effects,
-                "action": raw.get("action", ""),
-                "requirements": list(raw.get("requirements", [])),
-                "mirror_of": mirror_of,
-            }
-        )
+        resolved_state = {
+            "name": name,
+            "row": row,
+            "frames": frames,
+            "durations_ms": durations_ms,
+            "loop": raw.get("loop", True),
+            "effects": effects,
+            "action": raw.get("action", ""),
+            "requirements": list(raw.get("requirements", [])),
+            "mirror_of": mirror_of,
+        }
+        # These three fields are optional and only ever added when the
+        # authoring state actually has them, so a state that doesn't use them
+        # resolves to the exact same dict shape as before their introduction.
+        if "max_height_ratio" in raw:
+            resolved_state["max_height_ratio"] = raw["max_height_ratio"]
+        if "scale_reference_state" in raw:
+            resolved_state["scale_reference_state"] = raw["scale_reference_state"]
+        if "content_scale" in raw:
+            resolved_state["content_scale"] = raw["content_scale"]
+        resolved_states.append(resolved_state)
         row += 1
 
     max_frames = max((s["frames"] for s in resolved_states if isinstance(s["frames"], int)), default=0)
@@ -797,6 +852,7 @@ def validate_spec(spec: dict) -> list[str]:
     rows_seen: dict[int, str] = {}
     mirror_targets: dict[str, str | None] = {}
     per_name_frames: dict[str, object] = {}
+    scale_reference_requests: dict[str, str] = {}
 
     for state in states:
         if not isinstance(state, dict):
@@ -907,6 +963,45 @@ def validate_spec(spec: dict) -> list[str]:
             else:
                 errors.append(f"state '{name}': mirror_of must be an object")
 
+        max_height_ratio = state.get("max_height_ratio")
+        if max_height_ratio is not None:
+            if (
+                isinstance(max_height_ratio, bool)
+                or not isinstance(max_height_ratio, (int, float))
+                or not (0.3 <= max_height_ratio < 1.0)
+            ):
+                # 1.0 is excluded: it is a geometric no-op (the safe rect's
+                # top edge would not move at all) but would still trigger the
+                # guide's omitted center line and the job's "maximum
+                # character height" role text, so a state that means "no
+                # height cap" should simply omit the field instead.
+                errors.append(
+                    f"state '{name}': max_height_ratio must be a number "
+                    f">= 0.3 and < 1.0, got {max_height_ratio!r}"
+                )
+
+        content_scale = state.get("content_scale")
+        if content_scale is not None:
+            if (
+                isinstance(content_scale, bool)
+                or not isinstance(content_scale, (int, float))
+                or not (0.5 <= content_scale <= 1.0)
+            ):
+                errors.append(
+                    f"state '{name}': content_scale must be a number between "
+                    f"0.5 and 1.0, got {content_scale!r}"
+                )
+
+        scale_reference_state = state.get("scale_reference_state")
+        if scale_reference_state is not None:
+            if not isinstance(scale_reference_state, str) or not scale_reference_state:
+                errors.append(
+                    f"state '{name}': scale_reference_state must be a "
+                    "non-empty string"
+                )
+            else:
+                scale_reference_requests[name] = scale_reference_state
+
     n = len(states)
     if n and set(rows_seen.keys()) != set(range(n)):
         errors.append(
@@ -972,6 +1067,38 @@ def validate_spec(spec: dict) -> list[str]:
             errors.append(
                 f"state '{name}': frame count ({my_frames}) does not match "
                 f"mirror source '{source}' ({source_frames})"
+            )
+
+    for name, target in scale_reference_requests.items():
+        if target == name:
+            errors.append(f"state '{name}': scale_reference_state cannot reference itself")
+            continue
+        if target not in names_seen:
+            errors.append(f"state '{name}': scale_reference_state '{target}' does not exist")
+            continue
+        if target in mirror_targets:
+            errors.append(
+                f"state '{name}': scale_reference_state '{target}' is a "
+                "mirror state; mirror states cannot be used as a scale "
+                "reference"
+            )
+        if name in mirror_targets:
+            errors.append(
+                f"state '{name}': scale_reference_state cannot be set on a "
+                "mirror state"
+            )
+        if target in scale_reference_requests:
+            # Forbid chains and mutual references at the root: the target of
+            # scale_reference_state must be a plain, already-approved
+            # reference row, not another state that itself needs a scale
+            # reference. Without this, A -> B -> A (mutual) or A -> B -> C
+            # (chain) would resolve without error but have no well-defined
+            # scale source to actually ground on.
+            errors.append(
+                f"state '{name}': scale_reference_state '{target}' itself "
+                "has a scale_reference_state; chained or mutual scale "
+                "references are not allowed, the target must be a plain "
+                "approved reference row"
             )
 
     if mode == "pixel":

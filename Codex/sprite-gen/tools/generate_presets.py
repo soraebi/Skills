@@ -134,6 +134,8 @@ def state(
     action: str,
     requirements: list[str],
     mirror_of: str | None = None,
+    max_height_ratio: float | None = None,
+    scale_reference_state: str | None = None,
 ) -> dict:
     return {
         "name": name,
@@ -144,6 +146,8 @@ def state(
         "action": action,
         "requirements": requirements,
         "mirror_of": mirror_of,
+        "max_height_ratio": max_height_ratio,
+        "scale_reference_state": scale_reference_state,
     }
 
 
@@ -274,7 +278,10 @@ FAMILY_DEFS: dict[str, dict] = {
                 requirements=[
                     "Keep the character in a low crouched stance in both frames.",
                     "The two frames should be visually close so the loop does not pop.",
+                    "Keep the character's absolute body scale (head diameter, shoulder width, torso width) identical to the other rows; the lower stance must come from bent knees and hip drop, not from a larger drawing.",
                 ],
+                max_height_ratio=0.62,
+                scale_reference_state="dash",
             ),
             state(
                 "air-attack", 4, [90, 80, 110, 170], loop=False, effects="attached",
@@ -908,6 +915,14 @@ def build_state(template: dict, note: str) -> dict:
             "transform": MIRROR_TRANSFORM,
             "requires_explicit_approval": True,
         }
+    if template.get("max_height_ratio") is not None:
+        resolved["max_height_ratio"] = template["max_height_ratio"]
+    # scale_reference_state is never carried onto a mirror-derived state:
+    # validate_spec forbids setting it on a mirror state (the mirror's
+    # source is already the identity/scale ground truth), so copying it here
+    # would only ever produce an invalid resolved spec.
+    if template.get("scale_reference_state") and not template.get("mirror_of"):
+        resolved["scale_reference_state"] = template["scale_reference_state"]
     resolved["action"] = f"{template['action']} {note}"
     resolved["requirements"] = [*template["requirements"], note]
     return resolved
@@ -954,7 +969,12 @@ def all_preset_ids() -> list[str]:
 def write_preset(preset: dict, out_dir: Path) -> Path:
     path = out_dir / f"{preset['preset_id']}.json"
     text = json.dumps(preset, indent=2, ensure_ascii=False) + "\n"
-    path.write_text(text, encoding="utf-8")
+    # newline="" disables platform newline translation so output is always
+    # LF, matching every preset already committed under presets/ -- without
+    # this, writing on Windows silently turns every "\n" into "\r\n" and
+    # --check's byte-for-byte comparison against the LF-committed files fails
+    # on every preset, not just the ones a given change actually touches.
+    path.write_text(text, encoding="utf-8", newline="")
     return path
 
 

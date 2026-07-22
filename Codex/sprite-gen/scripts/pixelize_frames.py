@@ -68,11 +68,26 @@ def binarize_alpha(image: Image.Image, threshold: int = ALPHA_THRESHOLD) -> Imag
     return Image.merge("RGBA", (r, g, b, a))
 
 
-def downscale_to_cell(frame_working: Image.Image, cell_width: int, cell_height: int) -> Image.Image:
+def downscale_to_cell(
+    frame_working: Image.Image,
+    cell_width: int,
+    cell_height: int,
+    *,
+    content_scale: float | None = None,
+) -> Image.Image:
+    # `content_scale` (a repair-only, deterministic uniform scale-down) folds
+    # into this same BOX resize instead of adding a second resampling pass:
+    # the working-resolution frame is downscaled directly to the
+    # content-scaled target size, then bottom-center-placed onto the full
+    # cell canvas once binarization is done.
+    target_width, target_height = spec_lib.content_scaled_size(cell_width, cell_height, content_scale)
     premultiplied = premultiply(frame_working)
-    resized = premultiplied.resize((cell_width, cell_height), Image.Resampling.BOX)
+    resized = premultiplied.resize((target_width, target_height), Image.Resampling.BOX)
     unpremultiplied = unpremultiply(resized)
-    return binarize_alpha(unpremultiplied)
+    binarized = binarize_alpha(unpremultiplied)
+    if (target_width, target_height) == (cell_width, cell_height):
+        return binarized
+    return spec_lib.bottom_center_place(binarized, cell_width, cell_height)
 
 
 def build_shared_palette(frames_by_state: dict[str, list[Image.Image]], palette_colors: int) -> Image.Image:
@@ -144,10 +159,11 @@ def main() -> None:
         files = spec_lib.frame_files(frames_root / name)
         if len(files) != state["frames"]:
             raise SystemExit(f"{name}: expected {state['frames']} working-resolution frames under {frames_root / name}, found {len(files)}")
+        content_scale = state.get("content_scale")
         frames = []
         for path in files:
             with Image.open(path) as opened:
-                frames.append(downscale_to_cell(opened, cell_width, cell_height))
+                frames.append(downscale_to_cell(opened, cell_width, cell_height, content_scale=content_scale))
         downscaled_by_state[name] = frames
 
     palette_image = build_shared_palette(downscaled_by_state, palette_colors)
@@ -167,7 +183,15 @@ def main() -> None:
             output_path = state_dir / f"{index:02d}.png"
             final_frame.save(output_path)
             outputs.append(str(output_path))
-        manifest_rows.append({"state": name, "frames": outputs})
+        row_manifest = {"state": name, "frames": outputs}
+        content_scale = state.get("content_scale")
+        # Only record when a scale-down was actually applied (content_scale
+        # != 1.0) -- matching the condition downscale_to_cell/content_scaled_size
+        # use to decide whether to resize at all, so the manifest never
+        # claims a repair happened when the frame went through unscaled.
+        if content_scale is not None and content_scale != 1.0:
+            row_manifest["content_scale"] = content_scale
+        manifest_rows.append(row_manifest)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "frames-logical-manifest.json").write_text(
