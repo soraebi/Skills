@@ -765,7 +765,12 @@ extraction settings if multiple otherwise-good rows show the same symptom.
   explicitly declares `mirror_of` for it; every other state has distinct
   semantics and must be generated as its own row.
 - Never substitute locally drawn, tiled, transformed, or code-generated row
-  strips for missing `$imagegen` outputs.
+  strips for missing `$imagegen` outputs. This does not forbid a state's
+  `content_scale` (see `references/spec-format.md`): applying a real
+  `$imagegen`-generated row's own uniform, bottom-anchored scale
+  normalization in `pixelize_frames.py`/`extract_strip_frames.py` is a
+  deterministic repair pass on genuine generated pixels, not local drawing
+  or synthesis of new content.
 - Only mark a visual job complete after its selected output has been copied
   into the decoded output path.
 - Do not rely on generated images for exact atlas geometry; use this skill's

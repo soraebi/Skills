@@ -38,6 +38,43 @@ SPRITE_SAFE_STYLE = (
 
 STATES_NOT_MIRROR_DERIVABLE_REASON = "state requires its own generated animation semantics"
 
+# Appended to a row prompt (both first-attempt and retry) when the state
+# declares `scale_reference_state`: image_gen otherwise tends to draw a
+# low-stance pose enlarged to fill the layout guide's cell height instead of
+# matching the character's established scale (see references/spec-format.md
+# for the max_height_ratio / scale_reference_state / content_scale repair
+# story). Split into a core block plus an opt-in max-height sentence because
+# `scale_reference_state` is usable on its own (see spec-format.md's "may use
+# any subset") -- a state without `max_height_ratio` has no layout-guide
+# maximum-height boundary to point at, so that sentence would describe a
+# guide feature this state's own guide doesn't have. Deliberately says "pure
+# background" rather than naming the chroma key color, since the actual key
+# is spec-driven, not fixed.
+SCALE_LOCK_BLOCK_PREFIX = (
+    "Absolute scale lock: The attached approved scale-reference strip defines "
+    "the character's size. In all frames, match its head diameter, shoulder "
+    "width, torso width, hands, feet, and outline thickness. Do not enlarge "
+    "the character to fill the slot. Keep the soles on the bottom baseline. "
+    "Create the lower silhouette only by bending the knees and dropping the "
+    "hips."
+)
+SCALE_LOCK_MAX_HEIGHT_SENTENCE = (
+    " Keep every character pixel, including hair and accessories, below the "
+    "layout guide's maximum-height boundary, leaving the entire upper band "
+    "pure background."
+)
+SCALE_LOCK_BLOCK_SUFFIX = (
+    " Preserve the canonical-base identity and do not copy the reference "
+    "strip's poses or animation."
+)
+
+
+def scale_lock_block(state: dict) -> str:
+    block = SCALE_LOCK_BLOCK_PREFIX
+    if state.get("max_height_ratio") is not None:
+        block += SCALE_LOCK_MAX_HEIGHT_SENTENCE
+    return block + SCALE_LOCK_BLOCK_SUFFIX
+
 
 # ---------------------------------------------------------------------------
 # Name / description inference (renamed from pet_* to character_*)
@@ -200,6 +237,7 @@ def create_layout_guide(path: Path, state: dict, working_cell: dict) -> dict[str
     height = cell_height
     margin_x = round(cell_width * LAYOUT_GUIDE_SAFE_MARGIN_X_RATIO)
     margin_y = round(cell_height * LAYOUT_GUIDE_SAFE_MARGIN_Y_RATIO)
+    max_height_ratio = state.get("max_height_ratio")
 
     image = Image.new("RGB", (width, height), "#f7f7f7")
     draw = ImageDraw.Draw(image)
@@ -213,6 +251,16 @@ def create_layout_guide(path: Path, state: dict, working_cell: dict) -> dict[str
         safe_top = margin_y
         safe_right = right - margin_x
         safe_bottom = height - 1 - margin_y
+        if max_height_ratio is not None:
+            # Lower the safe rect's top edge so the silhouette's maximum
+            # allowed height is `max_height_ratio` of the normal safe height,
+            # keeping the same ground line (safe_bottom) and horizontal
+            # margins -- this is the layout-side half of the crouch-scale
+            # fix (see references/spec-format.md): a lower ceiling makes an
+            # oversized crouch pose visibly clip the guide instead of just
+            # relying on prompt text.
+            normal_safe_height = safe_bottom - safe_top
+            safe_top = safe_bottom - round(normal_safe_height * max_height_ratio)
         draw.rectangle(
             (safe_left, safe_top, safe_right, safe_bottom),
             outline="#2f80ed",
@@ -220,13 +268,18 @@ def create_layout_guide(path: Path, state: dict, working_cell: dict) -> dict[str
         )
 
         center_x = left + cell_width // 2
-        center_y = height // 2
         draw_dashed_line(draw, (center_x, safe_top), (center_x, safe_bottom), fill="#b8b8b8")
-        draw_dashed_line(draw, (safe_left, center_y), (safe_right, center_y), fill="#b8b8b8")
+        if max_height_ratio is None:
+            # The horizontal center line normally marks a vertical-centering
+            # hint; a max-height state instead wants the whole safe band
+            # read as a hard ceiling, so that hint is omitted rather than
+            # contradicting the lowered top edge.
+            center_y = height // 2
+            draw_dashed_line(draw, (safe_left, center_y), (safe_right, center_y), fill="#b8b8b8")
 
     path.parent.mkdir(parents=True, exist_ok=True)
     image.save(path)
-    return {
+    result = {
         "state": state["name"],
         "path": str(path),
         "width": width,
@@ -238,6 +291,9 @@ def create_layout_guide(path: Path, state: dict, working_cell: dict) -> dict[str
         "safe_margin_y": margin_y,
         "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips",
     }
+    if max_height_ratio is not None:
+        result["max_height_ratio"] = max_height_ratio
+    return result
 
 
 def create_layout_guides(run_dir: Path, spec: dict) -> list[dict[str, object]]:
@@ -378,6 +434,7 @@ def row_prompt(args: argparse.Namespace, spec: dict, state: dict, *, retry: bool
     state_requirements = "\n".join(f"- {line}" for line in state["requirements"])
     proportion_line = f"Body proportions: {spec['proportion']['prompt']}."
     closing = effects_closing(state["effects"], chroma_key)
+    scale_lock_text = f"\n\n{scale_lock_block(state)}" if state.get("scale_reference_state") else ""
 
     if retry:
         return f"""Create game character row `{state['name']}` for `{args.character_id}`: exactly {frames} full-body frames in one horizontal strip on flat pure {chroma_name} {chroma_key}.
@@ -392,7 +449,7 @@ Action: {state_action}
 State requirements:
 {state_requirements}
 
-One centered complete pose per invisible slot. {closing}"""
+One centered complete pose per invisible slot. {closing}{scale_lock_text}"""
 
     return f"""Create one horizontal animation strip for game character `{args.character_id}`, state `{state['name']}`.
 
@@ -409,12 +466,19 @@ State action: {state_action}
 State requirements:
 {state_requirements}
 
-{closing}"""
+{closing}{scale_lock_text}"""
 
 
 # ---------------------------------------------------------------------------
 # Job manifest
 # ---------------------------------------------------------------------------
+
+
+def layout_guide_role(state: dict) -> str:
+    role = f"layout guide for {state['frames']} frame slots; use for spacing only, do not copy guide lines"
+    if state.get("max_height_ratio") is not None:
+        role += " and maximum character height; keep all character pixels below the upper boundary, leave the upper band empty"
+    return role
 
 
 def make_jobs(spec: dict, run_dir: Path, copied_refs: list[dict[str, object]]) -> list[dict[str, object]]:
@@ -463,6 +527,22 @@ def make_jobs(spec: dict, run_dir: Path, copied_refs: list[dict[str, object]]) -
                 "requires_explicit_approval": mirror_of["requires_explicit_approval"],
                 "fallback_generation_skill": "$imagegen",
             }
+
+        scale_reference_state = state.get("scale_reference_state")
+        if scale_reference_state:
+            if scale_reference_state not in depends_on:
+                depends_on.append(scale_reference_state)
+            extra_inputs.append(
+                {
+                    "path": f"decoded/{scale_reference_state}.png",
+                    "role": (
+                        "approved absolute-scale reference; match head diameter, "
+                        "shoulder width, torso width, extremity size, and outline "
+                        "thickness, but do not copy its poses or cadence"
+                    ),
+                }
+            )
+
         jobs.append(
             {
                 "id": name,
@@ -474,7 +554,7 @@ def make_jobs(spec: dict, run_dir: Path, copied_refs: list[dict[str, object]]) -
                     *reference_inputs,
                     {
                         "path": f"{LAYOUT_GUIDE_DIR}/{name}.png",
-                        "role": f"layout guide for {state['frames']} frame slots; use for spacing only, do not copy guide lines",
+                        "role": layout_guide_role(state),
                     },
                     {
                         "path": CANONICAL_BASE_PATH,

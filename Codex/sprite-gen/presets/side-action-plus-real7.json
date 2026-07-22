@@ -96,10 +96,13 @@
       },
       "loop": true,
       "effects": "none",
+      "max_height_ratio": 0.62,
+      "scale_reference_state": "dash",
       "action": "Crouching hold: a low compact stance with a small breathing shift between two nearly identical poses. Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability.",
       "requirements": [
         "Keep the character in a low crouched stance in both frames.",
         "The two frames should be visually close so the loop does not pop.",
+        "Keep the character's absolute body scale (head diameter, shoulder width, torso width) identical to the other rows; the lower stance must come from bent knees and hip drop, not from a larger drawing.",
         "Proportion-appropriate motion for realistic build: realistic stride length and anticipation, silhouette-first readability."
       ]
     },

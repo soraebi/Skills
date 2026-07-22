@@ -346,12 +346,35 @@ def extract_state(
             frames = extract_slot_frames(strip, frame_count, cell_width, cell_height, padding)
             used_method = "slots"
 
+    # `content_scale` is a repair-only, deterministic uniform scale-down
+    # correction (see spec-format.md): a post-process applied after
+    # extraction has already produced cell-sized, bottom-anchored frames,
+    # rather than folded into the extraction resize itself (there is no
+    # single shared resize step across the components/stable-slots/slots
+    # methods to fold it into, unlike pixelize_frames.py's single BOX pass).
+    content_scale = state.get("content_scale")
+    if content_scale is not None and content_scale != 1.0:
+        target_width, target_height = spec_lib.content_scaled_size(cell_width, cell_height, content_scale)
+        frames = [
+            spec_lib.bottom_center_place(
+                frame.resize((target_width, target_height), Image.Resampling.LANCZOS),
+                cell_width,
+                cell_height,
+            )
+            for frame in frames
+        ]
+
     outputs = []
     for index, frame in enumerate(frames):
         output = state_dir / f"{index:02d}.png"
         frame.save(output)
         outputs.append(str(output))
-    return {"state": state["name"], "frames": outputs, "method": used_method}
+    result = {"state": state["name"], "frames": outputs, "method": used_method}
+    # Only record when a scale-down was actually applied, matching the
+    # condition above that gates the resize itself.
+    if content_scale is not None and content_scale != 1.0:
+        result["content_scale"] = content_scale
+    return result
 
 
 def main() -> None:
