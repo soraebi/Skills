@@ -74,6 +74,13 @@ ${CODEX_HOME:-$HOME/.codex}/skills/sprite-gen/
 
 その後、Codex に次のように依頼します: 「sprite-gen で横スクロール用キャラを作って: 陽気な苔グリーンのスライム騎士、pixel モード、32px、チビ等身」
 
+同梱プリセットを使う場合は、プリセットIDとキャラ設定を指定して依頼します:
+
+- 「sprite-gen の `topdown-rpg-toon3` プリセットで見下ろしRPGの村人キャラを作って: 赤いフードの旅商人」
+- 「sprite-gen の `side-action-plus-semi5` プリセットで発展アクション一式を作って: 銀髪の剣士。ベースは前回の `references/canonical-base.png` を参照画像に使って」
+
+プリセットIDは「同梱プリセット一覧」の命名規則(`<family>[-plus]-<proportion>`)どおりに指定すると、状態構成・フレーム数・セル幾何・等身がプリセットの定義で確定し、キャラの見た目だけを依頼文で伝えれば済みます。
+
 ## ドキュメント
 
 - `SKILL.md` — Codex が従うワークフロー全体(生成委譲・ワーカープロンプト・修復ループ・パッケージング)
